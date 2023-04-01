@@ -9,7 +9,7 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn)
+        app.add_startup_system(spawn_player)
             .add_system(keyboard_movement)
             .add_system(gamepad_movement);
     }

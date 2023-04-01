@@ -4,7 +4,7 @@ use super::player_cmps::{Player, Speed};
 use crate::game::camera::camera_cmps::CustomCamera;
 use crate::game::gamepad::gamepad_rcs::MyGamepad;
 
-pub fn spawn(
+pub fn spawn_player(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,

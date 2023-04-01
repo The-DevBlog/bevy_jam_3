@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-pub fn ground(
+pub fn spawn_ground(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
@@ -18,7 +18,7 @@ pub fn ground(
     ));
 }
 
-pub fn point_light(mut cmds: Commands) {
+pub fn spawn_light(mut cmds: Commands) {
     cmds.spawn((
         PointLightBundle {
             point_light: PointLight {
