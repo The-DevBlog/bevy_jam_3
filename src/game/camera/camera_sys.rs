@@ -29,6 +29,7 @@ pub fn orbit_mouse(
                     delta
                 }
             };
+
             let delta_y = rotation.y / window.height() * std::f32::consts::PI;
             let yaw = Quat::from_rotation_y(-delta_x);
             let pitch = Quat::from_rotation_x(-delta_y);
