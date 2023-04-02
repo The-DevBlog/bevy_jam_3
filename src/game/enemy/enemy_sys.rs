@@ -19,11 +19,12 @@ pub fn spawn_enemy(
     cmds.spawn((
         PbrBundle {
             material: materials.add(Color::RED.into()),
-            mesh: meshes.add(Mesh::from(shape::Cube {
-                size: 0.5,
+            mesh: meshes.add(Mesh::from(shape::Capsule {
+                radius: 0.25,
+                depth: 0.25,
                 ..default()
             })),
-            transform: Transform::from_xyz(x, 0.25, z),
+            transform: Transform::from_xyz(x, 0.3, z),
             ..default()
         },
         Enemy,
