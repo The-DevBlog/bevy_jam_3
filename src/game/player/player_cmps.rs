@@ -24,8 +24,3 @@ impl Stamina {
 
 #[derive(Component)]
 pub struct IsSprinting(pub bool);
-
-#[derive(Component)]
-pub struct Projectile {
-    pub direction: Vec3,
-}

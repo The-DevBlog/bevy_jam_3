@@ -2,11 +2,11 @@ use bevy::prelude::*;
 use rand::random;
 
 use crate::game::{
-    game_cmps::{Health, Speed},
+    game_cmps::{Hp, Speed},
     world::MAP_SIZE,
 };
 
-use super::{enemy_cmps::Enemy, ENEMY_HEALTH, ENEMY_SPEED};
+use super::{enemy_cmps::Enemy, ENEMY_HP, ENEMY_SPEED};
 
 pub fn spawn_enemy(
     mut cmds: Commands,
@@ -29,7 +29,7 @@ pub fn spawn_enemy(
         },
         Enemy,
         Speed(ENEMY_SPEED),
-        Health(ENEMY_HEALTH),
+        Hp(ENEMY_HP),
         Name::new("Enemy"),
     ));
 }

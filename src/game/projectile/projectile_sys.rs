@@ -1,12 +1,11 @@
 use bevy::prelude::*;
 
 use crate::game::{
-    camera::camera_cmps::CustomCamera,
-    gamepad::gamepad_rcs::MyGamepad,
-    player::player_cmps::{Player, Projectile},
+    camera::camera_cmps::CustomCamera, enemy::enemy_cmps::Enemy, game_cmps::Hp,
+    gamepad::gamepad_rcs::MyGamepad, player::player_cmps::Player,
 };
 
-use super::PROJECTILE_SPEED;
+use super::{projectile_cmps::Projectile, PROJECTILE_SPEED};
 
 pub fn shoot_gamepad(
     mut cmds: Commands,
@@ -47,18 +46,44 @@ pub fn shoot_gamepad(
                         0.0,
                         cam_transform.translation.z,
                     ),
+                    damage: 25.0,
                 },
             ));
         }
     }
 }
 
-pub fn projectile_movement(
+pub fn move_projectile(
     mut projectile_q: Query<(&mut Transform, &Projectile), With<Projectile>>,
     time: Res<Time>,
 ) {
     for (mut transform, projectile) in projectile_q.iter_mut() {
         transform.translation -=
             projectile.direction.normalize() * PROJECTILE_SPEED * time.delta_seconds();
+    }
+}
+
+pub fn damage_enemy(
+    mut cmds: Commands,
+    mut enemy_q: Query<(Entity, &Transform, &mut Hp), With<Enemy>>,
+    projectile_q: Query<(Entity, &Transform, &Projectile), With<Projectile>>,
+) {
+    for (enemy_ent, enemy_transform, mut enemy_hp) in enemy_q.iter_mut() {
+        for (projectile_ent, projectile_transform, projectile_dmg) in projectile_q.iter() {
+            let distance = enemy_transform
+                .translation
+                .distance(projectile_transform.translation);
+
+            // reduce enemy hp and despawn projectile
+            if distance < 0.25 {
+                enemy_hp.0 -= projectile_dmg.damage;
+                cmds.entity(projectile_ent).despawn_recursive();
+            }
+
+            // despawn enemy
+            if enemy_hp.0 <= 0.0 {
+                cmds.entity(enemy_ent).despawn_recursive();
+            }
+        }
     }
 }

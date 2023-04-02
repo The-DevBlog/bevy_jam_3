@@ -3,6 +3,7 @@
         "btns",
         "cmds",
         "cmps",
+        "despawn",
         "gamepad",
         "healthbar",
         "regen"

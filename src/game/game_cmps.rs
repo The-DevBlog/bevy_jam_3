@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct Health(pub f32);
+pub struct Hp(pub f32);
 
 #[derive(Component)]
 pub struct Speed(pub f32);

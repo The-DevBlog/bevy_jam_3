@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use super::hud_cmps::*;
-use crate::game::{game_cmps::Health, player::player_cmps::*};
+use crate::game::{game_cmps::Hp, player::player_cmps::*};
 
 fn new_txt(assets: &Res<AssetServer>) -> TextBundle {
     TextBundle::from_section(
@@ -97,11 +97,11 @@ pub fn update_stamina_bar(
 
 pub fn update_health_bar(
     mut stamina_q: Query<&mut Text, With<HealthBarTxt>>,
-    player_q: Query<&Health, With<Player>>,
+    player_q: Query<&Hp, With<Player>>,
 ) {
     if let Ok(mut txt) = stamina_q.get_single_mut() {
-        if let Ok(health) = player_q.get_single() {
-            txt.sections[0].value = health.0.round().to_string();
+        if let Ok(hp) = player_q.get_single() {
+            txt.sections[0].value = hp.0.round().to_string();
         }
     }
 }
