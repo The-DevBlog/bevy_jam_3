@@ -11,7 +11,7 @@ impl Default for MyGamepad {
     fn default() -> Self {
         MyGamepad {
             gamepad: Gamepad::new(0),
-            sensitivity: (5.0, 3.0),
+            sensitivity: (7.0, 4.0),
             deadzone: 0.5,
         }
     }

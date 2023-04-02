@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::player_cmps::{Player, Speed};
+use super::player_cmps::*;
 use crate::game::camera::camera_cmps::CustomCamera;
 use crate::game::gamepad::gamepad_rcs::MyGamepad;
 
@@ -22,6 +22,8 @@ pub fn spawn_player(
             },
             Player,
             Speed(5.0),
+            Stamina(50.0),
+            Health(100.0),
             Name::new("Player"),
         ))
         .id();
