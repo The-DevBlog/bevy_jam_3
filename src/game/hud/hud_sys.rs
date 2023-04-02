@@ -50,7 +50,7 @@ pub fn spawn_stamina_bar(mut cmds: Commands, assets: Res<AssetServer>) {
         });
 }
 
-pub fn update_stamina(
+pub fn update_stamina_bar(
     mut stamina_q: Query<&mut Text, With<StaminaBarTxt>>,
     player_q: Query<&Stamina, With<Player>>,
 ) {
@@ -61,7 +61,7 @@ pub fn update_stamina(
     }
 }
 
-pub fn update_health(
+pub fn update_health_bar(
     mut stamina_q: Query<&mut Text, With<HealthBarTxt>>,
     player_q: Query<&Health, With<Player>>,
 ) {

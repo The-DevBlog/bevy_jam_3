@@ -1,5 +1,4 @@
 use bevy::{
-    input::gamepad::GamepadButtonType::*,
     input::mouse::{MouseMotion, MouseWheel},
     prelude::*,
     window::PrimaryWindow,
@@ -121,10 +120,10 @@ pub fn zoom_gamepad(
     };
 
     if let Ok(mut cam) = cam_q.get_single_mut() {
-        let right_thumb = GamepadButton::new(gamepad, RightThumb);
+        let right_thumb = GamepadButton::new(gamepad, GamepadButtonType::RightThumb);
         if btns.pressed(right_thumb) {
-            let d_pad_down = GamepadButton::new(gamepad, DPadDown);
-            let d_pad_up = GamepadButton::new(gamepad, DPadUp);
+            let d_pad_down = GamepadButton::new(gamepad, GamepadButtonType::DPadDown);
+            let d_pad_up = GamepadButton::new(gamepad, GamepadButtonType::DPadUp);
 
             // zoom out
             if btns.pressed(d_pad_down) {

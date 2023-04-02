@@ -82,14 +82,21 @@ pub fn keyboard_movement(
             direction += cam.right().normalize();
         }
 
+        // sprint
+        let mut sprint = 1.0;
+        if keys.pressed(KeyCode::LShift) {
+            sprint = 1.4;
+        }
+
         direction.y = 0.0;
-        transform.translation += speed.0 * direction * time.delta_seconds();
+        transform.translation += speed.0 * sprint * direction * time.delta_seconds();
     }
 }
 
 pub fn gamepad_movement(
     time: Res<Time>,
     axis: Res<Axis<GamepadAxis>>,
+    btns: Res<Input<GamepadButton>>,
     mut player_q: Query<(&mut Transform, &Speed), With<Player>>,
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
     my_gamepad: Option<Res<MyGamepad>>,
@@ -136,7 +143,14 @@ pub fn gamepad_movement(
             direction += joystick_direction;
         }
 
+        // sprint
+        let mut sprint = 1.0;
+        let left_thumb = GamepadButton::new(gamepad, GamepadButtonType::LeftThumb);
+        if btns.pressed(left_thumb) {
+            sprint = 1.4;
+        }
+
         direction.y = 0.0;
-        transform.translation += speed.0 * direction * time.delta_seconds();
+        transform.translation += speed.0 * sprint * direction * time.delta_seconds();
     }
 }
