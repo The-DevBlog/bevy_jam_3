@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::MAP_SIZE;
+
 pub fn spawn_ground(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -8,7 +10,7 @@ pub fn spawn_ground(
     cmds.spawn((
         PbrBundle {
             mesh: meshes.add(Mesh::from(shape::Plane {
-                size: 10.0,
+                size: MAP_SIZE,
                 ..default()
             })),
             material: materials.add(Color::GRAY.into()),
