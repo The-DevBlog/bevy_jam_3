@@ -11,3 +11,6 @@ pub struct Stamina(pub f32);
 
 #[derive(Component)]
 pub struct Health(pub f32);
+
+#[derive(Component)]
+pub struct IsSprinting(pub bool);

@@ -24,6 +24,7 @@ pub fn spawn_player(
             Speed(5.0),
             Stamina(50.0),
             Health(100.0),
+            IsSprinting(false),
             Name::new("Player"),
         ))
         .id();
@@ -51,10 +52,10 @@ pub fn spawn_player(
 pub fn keyboard_movement(
     time: Res<Time>,
     keys: Res<Input<KeyCode>>,
-    mut player_q: Query<(&mut Transform, &Speed), With<Player>>,
+    mut player_q: Query<(&mut Transform, &Speed, &mut IsSprinting), With<Player>>,
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
 ) {
-    for (mut transform, speed) in player_q.iter_mut() {
+    for (mut transform, speed, mut sprinting) in player_q.iter_mut() {
         let cam = match cam_q.get_single() {
             Ok(c) => c,
             Err(e) => Err(format!("Error retrieving camera: {}", e)).unwrap(),
@@ -84,8 +85,10 @@ pub fn keyboard_movement(
 
         // sprint
         let mut sprint = 1.0;
+        sprinting.0 = false;
         if keys.pressed(KeyCode::LShift) {
             sprint = 1.4;
+            sprinting.0 = true;
         }
 
         direction.y = 0.0;
@@ -152,5 +155,13 @@ pub fn gamepad_movement(
 
         direction.y = 0.0;
         transform.translation += speed.0 * sprint * direction * time.delta_seconds();
+    }
+}
+
+pub fn update_stamina(mut player_q: Query<(&mut Stamina, &IsSprinting), With<Player>>) {
+    for (mut stamina, sprinting) in player_q.iter_mut() {
+        if sprinting.0 {
+            stamina.0 -= 0.05;
+        }
     }
 }
