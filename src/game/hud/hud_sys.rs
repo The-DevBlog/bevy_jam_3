@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use super::hud_cmps::*;
-use crate::game::player::player_cmps::*;
+use crate::game::{game_cmps::Health, player::player_cmps::*};
 
 fn new_txt(assets: &Res<AssetServer>) -> TextBundle {
     TextBundle::from_section(

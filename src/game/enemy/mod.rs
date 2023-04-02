@@ -5,6 +5,9 @@ mod enemy_sys;
 
 use enemy_sys::*;
 
+pub const ENEMY_SPEED: f32 = 2.5;
+pub const ENEMY_HEALTH: f32 = 100.0;
+
 pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {

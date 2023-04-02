@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 pub mod camera;
 pub mod enemy;
+pub mod game_cmps;
 pub mod gamepad;
 pub mod hud;
 pub mod player;

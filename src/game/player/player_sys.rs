@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 
-use super::player_cmps::*;
+use super::{player_cmps::*, PLAYER_HEALTH, PLAYER_SPEED, PLAYER_STAMINA, SPRINT_SPEED};
 use crate::game::camera::camera_cmps::CustomCamera;
+use crate::game::game_cmps::{Health, Speed};
 use crate::game::gamepad::gamepad_rcs::MyGamepad;
 
 pub fn spawn_player(
@@ -21,9 +22,9 @@ pub fn spawn_player(
                 ..default()
             },
             Player,
-            Speed(5.0),
-            Stamina::new(50.0),
-            Health(100.0),
+            Speed(PLAYER_SPEED),
+            Stamina::new(PLAYER_STAMINA),
+            Health(PLAYER_HEALTH),
             IsSprinting(false),
             Name::new("Player"),
         ))
@@ -86,7 +87,7 @@ pub fn keyboard_movement(
         // sprint
         let mut sprint = 1.0;
         if keys.pressed(KeyCode::LShift) {
-            sprint = 1.4;
+            sprint = SPRINT_SPEED;
             sprinting.0 = true;
         }
 
@@ -149,7 +150,7 @@ pub fn gamepad_movement(
         let mut sprint = 1.0;
         let left_thumb = GamepadButton::new(gamepad, GamepadButtonType::LeftThumb);
         if btns.pressed(left_thumb) && stamina.current > 0.0 {
-            sprint = 1.4;
+            sprint = SPRINT_SPEED;
             sprinting.0 = true;
         }
 
