@@ -85,7 +85,6 @@ pub fn keyboard_movement(
 
         // sprint
         let mut sprint = 1.0;
-        sprinting.0 = false;
         if keys.pressed(KeyCode::LShift) {
             sprint = 1.4;
             sprinting.0 = true;
@@ -100,7 +99,7 @@ pub fn gamepad_movement(
     time: Res<Time>,
     axis: Res<Axis<GamepadAxis>>,
     btns: Res<Input<GamepadButton>>,
-    mut player_q: Query<(&mut Transform, &Speed), With<Player>>,
+    mut player_q: Query<(&mut Transform, &Speed, &mut IsSprinting), With<Player>>,
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
     my_gamepad: Option<Res<MyGamepad>>,
 ) {
@@ -126,7 +125,7 @@ pub fn gamepad_movement(
         left_joystick = Vec2::new(x, y);
     }
 
-    for (mut transform, speed) in player_q.iter_mut() {
+    for (mut transform, speed, mut sprinting) in player_q.iter_mut() {
         let cam = match cam_q.get_single() {
             Ok(c) => c,
             Err(e) => Err(format!("Error retrieving camera: {}", e)).unwrap(),
@@ -151,6 +150,7 @@ pub fn gamepad_movement(
         let left_thumb = GamepadButton::new(gamepad, GamepadButtonType::LeftThumb);
         if btns.pressed(left_thumb) {
             sprint = 1.4;
+            sprinting.0 = true;
         }
 
         direction.y = 0.0;
@@ -158,10 +158,13 @@ pub fn gamepad_movement(
     }
 }
 
-pub fn update_stamina(mut player_q: Query<(&mut Stamina, &IsSprinting), With<Player>>) {
-    for (mut stamina, sprinting) in player_q.iter_mut() {
+pub fn update_stamina(mut player_q: Query<(&mut Stamina, &mut IsSprinting), With<Player>>) {
+    for (mut stamina, mut sprinting) in player_q.iter_mut() {
+        println!("{}", sprinting.0);
         if sprinting.0 {
             stamina.0 -= 0.05;
         }
+
+        sprinting.0 = false;
     }
 }
