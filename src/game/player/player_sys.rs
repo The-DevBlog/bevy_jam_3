@@ -22,7 +22,7 @@ pub fn spawn_player(
             },
             Player,
             Speed(5.0),
-            Stamina(50.0),
+            Stamina::new(50.0),
             Health(100.0),
             IsSprinting(false),
             Name::new("Player"),
@@ -99,7 +99,7 @@ pub fn gamepad_movement(
     time: Res<Time>,
     axis: Res<Axis<GamepadAxis>>,
     btns: Res<Input<GamepadButton>>,
-    mut player_q: Query<(&mut Transform, &Speed, &mut IsSprinting), With<Player>>,
+    mut player_q: Query<(&mut Transform, &Speed, &mut IsSprinting, &Stamina), With<Player>>,
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
     my_gamepad: Option<Res<MyGamepad>>,
 ) {
@@ -125,7 +125,7 @@ pub fn gamepad_movement(
         left_joystick = Vec2::new(x, y);
     }
 
-    for (mut transform, speed, mut sprinting) in player_q.iter_mut() {
+    for (mut transform, speed, mut sprinting, stamina) in player_q.iter_mut() {
         let cam = match cam_q.get_single() {
             Ok(c) => c,
             Err(e) => Err(format!("Error retrieving camera: {}", e)).unwrap(),
@@ -148,7 +148,7 @@ pub fn gamepad_movement(
         // sprint
         let mut sprint = 1.0;
         let left_thumb = GamepadButton::new(gamepad, GamepadButtonType::LeftThumb);
-        if btns.pressed(left_thumb) {
+        if btns.pressed(left_thumb) && stamina.current > 0.0 {
             sprint = 1.4;
             sprinting.0 = true;
         }
@@ -158,11 +158,18 @@ pub fn gamepad_movement(
     }
 }
 
-pub fn update_stamina(mut player_q: Query<(&mut Stamina, &mut IsSprinting), With<Player>>) {
+pub fn update_stamina(
+    mut player_q: Query<(&mut Stamina, &mut IsSprinting), With<Player>>,
+    time: Res<Time>,
+) {
     for (mut stamina, mut sprinting) in player_q.iter_mut() {
-        println!("{}", sprinting.0);
-        if sprinting.0 {
-            stamina.0 -= 0.05;
+        println!("{:?}", stamina.regen_time.duration());
+
+        if sprinting.0 && stamina.current >= 0.0 {
+            stamina.current -= 0.05;
+        } else if stamina.current < stamina.max {
+            stamina.regen_time.tick(time.delta());
+            stamina.current += 0.025;
         }
 
         sprinting.0 = false;
