@@ -163,13 +163,18 @@ pub fn update_stamina(
     time: Res<Time>,
 ) {
     for (mut stamina, mut sprinting) in player_q.iter_mut() {
-        println!("{:?}", stamina.regen_time.duration());
-
+        // if sprinting & stamina is greater than zero, drain stamina & reset regen timer
         if sprinting.0 && stamina.current >= 0.0 {
-            stamina.current -= 0.05;
+            stamina.current -= 0.1;
+            stamina.regen_time.reset();
+
+        // if regen timer finished & stamina is less than max, regenerate stamina
+        } else if stamina.regen_time.just_finished() && stamina.current < stamina.max {
+            stamina.current += 0.025;
+
+        // if stamina is less than the max, tick the regen timer
         } else if stamina.current < stamina.max {
             stamina.regen_time.tick(time.delta());
-            stamina.current += 0.025;
         }
 
         sprinting.0 = false;
