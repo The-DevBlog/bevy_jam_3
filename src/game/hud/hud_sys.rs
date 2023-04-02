@@ -90,7 +90,7 @@ pub fn update_stamina_bar(
 ) {
     if let Ok(mut txt) = stamina_q.get_single_mut() {
         if let Ok(stamina) = player_q.get_single() {
-            txt.sections[0].value = stamina.current.to_string();
+            txt.sections[0].value = stamina.current.round().to_string();
         }
     }
 }
@@ -101,7 +101,7 @@ pub fn update_health_bar(
 ) {
     if let Ok(mut txt) = stamina_q.get_single_mut() {
         if let Ok(health) = player_q.get_single() {
-            txt.sections[0].value = health.0.to_string();
+            txt.sections[0].value = health.0.round().to_string();
         }
     }
 }
