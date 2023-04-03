@@ -4,7 +4,7 @@ mod world_sys;
 
 use world_sys::*;
 
-pub const MAP_SIZE: f32 = 10.0;
+pub const MAP_SIZE: f32 = 25.0;
 
 pub struct WorldPlugin;
 

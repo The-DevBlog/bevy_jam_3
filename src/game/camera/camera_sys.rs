@@ -86,8 +86,6 @@ pub fn orbit_gamepad(
             let pitch = Quat::from_rotation_x(-delta_y);
             transform.rotation = yaw * transform.rotation; // rotate around global y axis
             transform.rotation = transform.rotation * pitch;
-
-            println!("{}", transform.forward());
         }
 
         let rot_matrix = Mat3::from_quat(transform.rotation);

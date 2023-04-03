@@ -6,6 +6,8 @@
         "despawn",
         "gamepad",
         "healthbar",
+        "POWERUP",
+        "powerups",
         "regen"
     ]
 }

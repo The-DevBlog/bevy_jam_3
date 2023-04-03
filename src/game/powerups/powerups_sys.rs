@@ -1,18 +1,15 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::game::{
-    game_cmps::{Hp, Speed},
-    world::MAP_SIZE,
-};
+use crate::game::world::MAP_SIZE;
 
-use super::{enemy_cmps::Enemy, enemy_res::EnemySpawnTimer, ENEMY_HP, ENEMY_SPEED};
+use super::powerups_res::PowerUpSpawnTime;
 
-pub fn spawn_enemies(
+pub fn spawn_powerups(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
-    mut spawn_timer: ResMut<EnemySpawnTimer>,
+    mut spawn_timer: ResMut<PowerUpSpawnTime>,
     time: Res<Time>,
 ) {
     spawn_timer.0.tick(time.delta());
@@ -26,19 +23,16 @@ pub fn spawn_enemies(
     if spawn_timer.0.finished() {
         cmds.spawn((
             PbrBundle {
-                material: materials.add(Color::RED.into()),
-                mesh: meshes.add(Mesh::from(shape::Capsule {
-                    radius: 0.25,
-                    depth: 0.25,
+                material: materials.add(Color::GREEN.into()),
+                mesh: meshes.add(Mesh::from(shape::Cylinder {
+                    height: 0.2,
+                    radius: 0.1,
                     ..default()
                 })),
                 transform: Transform::from_xyz(x, 0.3, z),
                 ..default()
             },
-            Enemy,
-            Speed(ENEMY_SPEED),
-            Hp(ENEMY_HP),
-            Name::new("Enemy"),
+            Name::new("PowerUp"),
         ));
     }
 }

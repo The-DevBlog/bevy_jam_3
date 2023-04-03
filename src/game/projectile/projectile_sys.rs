@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::game::{
     camera::camera_cmps::CustomCamera, enemy::enemy_cmps::Enemy, game_cmps::Hp,
-    gamepad::gamepad_rcs::MyGamepad, player::player_cmps::Player,
+    gamepad::gamepad_rcs::MyGamepad, player::player_cmps::Player, world::MAP_SIZE,
 };
 
 use super::{projectile_cmps::Projectile, PROJECTILE_SPEED};
@@ -84,6 +84,19 @@ pub fn damage_enemy(
             if enemy_hp.0 <= 0.0 {
                 cmds.entity(enemy_ent).despawn_recursive();
             }
+        }
+    }
+}
+
+pub fn despawn_projectile(
+    mut cmds: Commands,
+    projectile_q: Query<(Entity, &Transform), With<Projectile>>,
+) {
+    for (ent, transform) in projectile_q.iter() {
+        if transform.translation.x.abs() > MAP_SIZE / 2.0
+            || transform.translation.z.abs() > MAP_SIZE / 2.0
+        {
+            cmds.entity(ent).despawn_recursive();
         }
     }
 }
