@@ -19,6 +19,7 @@ pub fn shoot_gamepad(
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
     btns: Res<Input<GamepadButton>>,
     my_gamepad: Option<Res<MyGamepad>>,
+    mouse: Res<Input<MouseButton>>,
 ) {
     // return id of gamepad if one is connected
     let gamepad = if let Some(gp) = my_gamepad {
@@ -30,7 +31,7 @@ pub fn shoot_gamepad(
     if let Ok(transform) = player_q.get_single() {
         let right_trigger = GamepadButton::new(gamepad, GamepadButtonType::RightTrigger2);
 
-        if btns.just_pressed(right_trigger) {
+        if btns.just_pressed(right_trigger) || mouse.just_pressed(MouseButton::Left) {
             // Get the camera's forward direction vector on the xz plane
             let cam_transform = cam_q.iter().next().unwrap();
 
@@ -70,10 +71,10 @@ pub fn damage_enemy(
     mut cmds: Commands,
     player_q: Query<&Damage, (With<Player>, Without<Enemy>)>,
     mut enemy_q: Query<(Entity, &Transform, &mut Hp), With<Enemy>>,
-    projectile_q: Query<(Entity, &Transform, &Projectile), With<Projectile>>,
+    projectile_q: Query<(Entity, &Transform), With<Projectile>>,
 ) {
     for (enemy_ent, enemy_transform, mut enemy_hp) in enemy_q.iter_mut() {
-        for (projectile_ent, projectile_transform, projectile_dmg) in projectile_q.iter() {
+        for (projectile_ent, projectile_transform) in projectile_q.iter() {
             let distance = enemy_transform
                 .translation
                 .distance(projectile_transform.translation);
@@ -83,7 +84,7 @@ pub fn damage_enemy(
             // reduce enemy hp and despawn projectile
             if distance < 0.25 {
                 // enemy_hp.0 -= projectile_dmg.damage;
-                enemy_hp.0 -= dmg.0;
+                enemy_hp.0 -= dmg.current;
                 cmds.entity(projectile_ent).despawn_recursive();
             }
 

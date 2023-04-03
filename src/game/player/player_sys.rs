@@ -23,7 +23,7 @@ pub fn spawn_player(
             Stamina::new(PLAYER_STAMINA),
             Hp(PLAYER_HP),
             IsSprinting(false),
-            Damage(25.0),
+            Damage::new(25.0),
             Name::new("Player"),
         ))
         .id();

@@ -12,7 +12,8 @@ use crate::game::{
 
 use super::{
     powerups_cmps::{DamagePowerUp, HealthPowerUp, StaminaPowerUp},
-    powerups_res::PowerUpSpawnTime,
+    powerups_res::{DamageDuration, PowerUpSpawnTime},
+    DMG_BOOST,
 };
 
 pub fn spawn_powerups(
@@ -96,6 +97,7 @@ pub fn collect_damage_powerup(
     mut cmds: Commands,
     mut player_q: Query<(&Transform, &mut Damage), With<Player>>,
     powerup_q: Query<(Entity, &Transform), With<DamagePowerUp>>,
+    mut duration_res: ResMut<DamageDuration>,
 ) {
     for (powerup_ent, powerup_transform) in powerup_q.iter() {
         for (player_transform, mut dmg) in player_q.iter_mut() {
@@ -105,9 +107,29 @@ pub fn collect_damage_powerup(
 
             // collect powerup and despawn
             if distance < PLAYER_SIZE {
-                dmg.0 += 25.0;
+                duration_res.0.reset();
+                duration_res.0.unpause();
                 cmds.entity(powerup_ent).despawn_recursive();
+
+                dmg.current = dmg.original + DMG_BOOST;
             }
         }
+    }
+}
+
+pub fn tick_damage_duration_timer(
+    mut player_q: Query<&mut Damage, With<Player>>,
+    time: Res<Time>,
+    mut duration_res: ResMut<DamageDuration>,
+) {
+    duration_res.0.tick(time.delta());
+
+    if duration_res.0.finished() {
+        if let Ok(mut dmg) = player_q.get_single_mut() {
+            dmg.current = dmg.original;
+        }
+
+        duration_res.0.reset();
+        duration_res.0.pause();
     }
 }
