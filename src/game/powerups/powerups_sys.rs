@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use rand::Rng;
 
 use crate::game::{
+    game_cmps::Damage,
     player::{
         player_cmps::{Player, Stamina},
         PLAYER_SIZE,
@@ -9,9 +10,12 @@ use crate::game::{
     world::MAP_SIZE,
 };
 
-use super::{powerups_cmps::StaminaPowerUp, powerups_res::PowerUpSpawnTime};
+use super::{
+    powerups_cmps::{DamagePowerUp, HealthPowerUp, StaminaPowerUp},
+    powerups_res::PowerUpSpawnTime,
+};
 
-pub fn spawn_stamina_powerups(
+pub fn spawn_powerups(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
@@ -19,28 +23,52 @@ pub fn spawn_stamina_powerups(
     time: Res<Time>,
 ) {
     spawn_timer.0.tick(time.delta());
-
     let mut rng = rand::thread_rng();
 
     let map_bounds = MAP_SIZE / 2.0;
     let x = rng.gen_range(-map_bounds..=map_bounds);
     let z = rng.gen_range(-map_bounds..=map_bounds);
 
-    if spawn_timer.0.finished() {
-        cmds.spawn((
-            PbrBundle {
-                material: materials.add(Color::GREEN.into()),
-                mesh: meshes.add(Mesh::from(shape::Cylinder {
-                    height: 0.2,
-                    radius: 0.1,
-                    ..default()
-                })),
-                transform: Transform::from_xyz(x, 0.3, z),
+    let mut powerup = |color: Color| -> PbrBundle {
+        PbrBundle {
+            material: materials.add(color.into()),
+            mesh: meshes.add(Mesh::from(shape::Cylinder {
+                height: 0.2,
+                radius: 0.1,
                 ..default()
-            },
-            StaminaPowerUp,
-            Name::new("Stamina PowerUp"),
-        ));
+            })),
+            transform: Transform::from_xyz(x, 0.3, z),
+            ..default()
+        }
+    };
+
+    if spawn_timer.0.finished() {
+        let random_powerup = rng.gen_range(1..=3);
+
+        match random_powerup {
+            1 => {
+                cmds.spawn((
+                    powerup(Color::GREEN),
+                    StaminaPowerUp,
+                    Name::new("Stamina PowerUp"),
+                ));
+            }
+            2 => {
+                cmds.spawn((
+                    powerup(Color::RED),
+                    HealthPowerUp,
+                    Name::new("Health PowerUp"),
+                ));
+            }
+            3 => {
+                cmds.spawn((
+                    powerup(Color::YELLOW),
+                    DamagePowerUp,
+                    Name::new("Damage PowerUp"),
+                ));
+            }
+            _ => (),
+        }
     }
 }
 
@@ -58,6 +86,26 @@ pub fn collect_stamina_powerup(
             // collect powerup and despawn
             if distance < PLAYER_SIZE {
                 stamina.current = stamina.max;
+                cmds.entity(powerup_ent).despawn_recursive();
+            }
+        }
+    }
+}
+
+pub fn collect_damage_powerup(
+    mut cmds: Commands,
+    mut player_q: Query<(&Transform, &mut Damage), With<Player>>,
+    powerup_q: Query<(Entity, &Transform), With<DamagePowerUp>>,
+) {
+    for (powerup_ent, powerup_transform) in powerup_q.iter() {
+        for (player_transform, mut dmg) in player_q.iter_mut() {
+            let distance = powerup_transform
+                .translation
+                .distance(player_transform.translation);
+
+            // collect powerup and despawn
+            if distance < PLAYER_SIZE {
+                dmg.0 += 25.0;
                 cmds.entity(powerup_ent).despawn_recursive();
             }
         }

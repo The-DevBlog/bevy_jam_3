@@ -14,7 +14,8 @@ pub struct PowerUpsPlugin;
 impl Plugin for PowerUpsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PowerUpSpawnTime>()
-            .add_system(spawn_stamina_powerups)
-            .add_system(collect_stamina_powerup);
+            .add_system(spawn_powerups)
+            .add_system(collect_stamina_powerup)
+            .add_system(collect_damage_powerup);
     }
 }
