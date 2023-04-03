@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::{player_cmps::*, PLAYER_HP, PLAYER_SPEED, PLAYER_STAMINA, SPRINT_SPEED};
+use super::{player_cmps::*, PLAYER_HP, PLAYER_SIZE, PLAYER_SPEED, PLAYER_STAMINA, SPRINT_SPEED};
 use crate::game::camera::camera_cmps::CustomCamera;
 use crate::game::game_cmps::{Hp, Speed};
 use crate::game::gamepad::gamepad_rcs::MyGamepad;
@@ -14,7 +14,7 @@ pub fn spawn_player(
         .spawn((
             PbrBundle {
                 material: materials.add(Color::BLUE.into()),
-                mesh: meshes.add(Mesh::from(shape::Cube::new(0.5))),
+                mesh: meshes.add(Mesh::from(shape::Cube::new(PLAYER_SIZE))),
                 transform: Transform::from_xyz(0.0, 0.25, 0.0),
                 ..default()
             },

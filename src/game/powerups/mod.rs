@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+pub mod powerups_cmps;
 pub mod powerups_res;
 mod powerups_sys;
 
@@ -13,6 +14,7 @@ pub struct PowerUpsPlugin;
 impl Plugin for PowerUpsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PowerUpSpawnTime>()
-            .add_system(spawn_powerups);
+            .add_system(spawn_stamina_powerups)
+            .add_system(collect_stamina_powerup);
     }
 }

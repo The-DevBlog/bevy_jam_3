@@ -1,11 +1,17 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::game::world::MAP_SIZE;
+use crate::game::{
+    player::{
+        player_cmps::{Player, Stamina},
+        PLAYER_SIZE,
+    },
+    world::MAP_SIZE,
+};
 
-use super::powerups_res::PowerUpSpawnTime;
+use super::{powerups_cmps::StaminaPowerUp, powerups_res::PowerUpSpawnTime};
 
-pub fn spawn_powerups(
+pub fn spawn_stamina_powerups(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
@@ -32,7 +38,28 @@ pub fn spawn_powerups(
                 transform: Transform::from_xyz(x, 0.3, z),
                 ..default()
             },
-            Name::new("PowerUp"),
+            StaminaPowerUp,
+            Name::new("Stamina PowerUp"),
         ));
+    }
+}
+
+pub fn collect_stamina_powerup(
+    mut cmds: Commands,
+    mut player_q: Query<(&mut Stamina, &Transform), With<Player>>,
+    powerup_q: Query<(Entity, &Transform), With<StaminaPowerUp>>,
+) {
+    for (powerup_ent, powerup_transform) in powerup_q.iter() {
+        for (mut stamina, player_transform) in player_q.iter_mut() {
+            let distance = powerup_transform
+                .translation
+                .distance(player_transform.translation);
+
+            // collect powerup and despawn
+            if distance < PLAYER_SIZE {
+                stamina.current = stamina.max;
+                cmds.entity(powerup_ent).despawn_recursive();
+            }
+        }
     }
 }

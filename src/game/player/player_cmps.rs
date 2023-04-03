@@ -17,7 +17,7 @@ impl Stamina {
         Self {
             max,
             current: max,
-            regen_time: Timer::new(Duration::from_secs(3), TimerMode::Once),
+            regen_time: Timer::new(Duration::from_secs(2), TimerMode::Once),
         }
     }
 }

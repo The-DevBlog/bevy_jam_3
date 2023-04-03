@@ -88,6 +88,7 @@ pub fn damage_enemy(
     }
 }
 
+/// despawn projectiles once they pass beyond the map bounds
 pub fn despawn_projectile(
     mut cmds: Commands,
     projectile_q: Query<(Entity, &Transform), With<Projectile>>,

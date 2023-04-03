@@ -9,6 +9,7 @@ pub const PLAYER_SPEED: f32 = 2.5;
 pub const PLAYER_HP: f32 = 100.0;
 pub const PLAYER_STAMINA: f32 = 50.0;
 pub const SPRINT_SPEED: f32 = 2.0;
+pub const PLAYER_SIZE: f32 = 0.5;
 
 pub struct PlayerPlugin;
 
