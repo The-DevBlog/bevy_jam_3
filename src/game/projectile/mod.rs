@@ -1,19 +1,21 @@
 use bevy::prelude::*;
 
 pub mod projectile_cmps;
+pub mod projectile_res;
 mod projectile_sys;
 
+use crate::AppState;
+use projectile_res::*;
 use projectile_sys::*;
 
-use crate::AppState;
-
 pub const PROJECTILE_SPEED: f32 = 15.0;
+pub const FIRE_RATE: u64 = 150;
 
 pub struct ProjectilePlugin;
 
 impl Plugin for ProjectilePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
+        app.init_resource::<FireRate>().add_systems(
             (
                 shoot_gamepad,
                 move_projectile,
