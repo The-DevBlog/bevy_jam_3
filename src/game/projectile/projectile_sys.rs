@@ -33,28 +33,33 @@ pub fn shoot_gamepad(
     if let Ok(player_trans) = player_q.get_single() {
         let right_trigger = GamepadButton::new(gamepad, GamepadButtonType::RightTrigger2);
 
-        if btns.pressed(right_trigger) || mouse.just_pressed(MouseButton::Left) {
-            if fire_rate.0.finished() || fire_rate.0.percent_left() == 1.0 {
-                // Get the camera's forward direction vector on the xz plane
-                let cam_trans = cam_q.iter().next().unwrap();
+        // Get the camera's forward direction vector on the xz plane
+        let cam_trans = cam_q.iter().next().unwrap();
 
-                cmds.spawn((
-                    PbrBundle {
-                        material: materials.add(Color::YELLOW.into()),
-                        mesh: meshes.add(Mesh::from(shape::UVSphere {
-                            radius: 0.025,
-                            ..default()
-                        })),
-                        transform: Transform::from_translation(player_trans.translation),
+        if btns.pressed(right_trigger) || mouse.just_pressed(MouseButton::Left) {
+            let projectile = (
+                PbrBundle {
+                    material: materials.add(Color::YELLOW.into()),
+                    mesh: meshes.add(Mesh::from(shape::UVSphere {
+                        radius: 0.025,
                         ..default()
-                    },
-                    Projectile {
-                        direction: Vec3::new(cam_trans.translation.x, 0.0, cam_trans.translation.z),
-                    },
-                    Game,
-                ));
-                fire_rate.0.tick(time.delta());
+                    })),
+                    transform: Transform::from_translation(player_trans.translation),
+                    ..default()
+                },
+                Projectile {
+                    direction: Vec3::new(cam_trans.translation.x, 0.0, cam_trans.translation.z),
+                },
+                Game,
+            );
+
+            if fire_rate.0.finished() || fire_rate.0.percent_left() == 1.0 {
+                cmds.spawn(projectile);
             }
+
+            fire_rate.0.tick(time.delta());
+        } else {
+            fire_rate.0.reset();
         }
     }
 }
