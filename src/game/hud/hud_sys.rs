@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use super::hud_cmps::*;
 use crate::game::{
     game_cmps::{Game, Hp},
+    game_res::GameTime,
     player::player_cmps::*,
 };
 
@@ -23,6 +24,7 @@ fn new_container(color: Color, position: UiRect, size: Size) -> NodeBundle {
         style: Style {
             align_self: AlignSelf::FlexStart,
             align_items: AlignItems::Center,
+            justify_content: JustifyContent::Center,
             padding: UiRect::all(Val::Px(20.0)),
             position,
             position_type: PositionType::Absolute,
@@ -111,5 +113,50 @@ pub fn update_health_bar(
         if let Ok(hp) = player_q.get_single() {
             txt.sections[0].value = hp.0.round().to_string();
         }
+    }
+}
+
+pub fn spawn_time_display(mut cmds: Commands, assets: Res<AssetServer>) {
+    let container = (
+        NodeBundle {
+            style: Style {
+                align_items: AlignItems::Center,
+                position_type: PositionType::Absolute,
+                position: UiRect::left(Val::Percent(46.5)),
+                ..default()
+            },
+            ..default()
+        },
+        Game,
+        GameTimeDisplay,
+        Name::new("Game Time Display"),
+    );
+
+    let txt = (
+        TextBundle::from_section(
+            "0:00",
+            TextStyle {
+                color: Color::WHITE,
+                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font_size: 40.0,
+                ..default()
+            },
+        ),
+        GameTimeDisplayTxt,
+        Name::new("Game Time Display Text"),
+    );
+
+    cmds.spawn(container).with_children(|parent| {
+        parent.spawn(txt);
+    });
+}
+
+pub fn update_time_display(
+    mut time_display_q: Query<&mut Text, With<GameTimeDisplayTxt>>,
+    game_time: Res<GameTime>,
+) {
+    if let Ok(mut txt) = time_display_q.get_single_mut() {
+        let time = game_time.0.elapsed().as_secs_f32();
+        txt.sections[0].value = format!("{:.2}", time);
     }
 }

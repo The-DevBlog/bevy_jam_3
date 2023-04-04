@@ -11,3 +11,9 @@ pub struct StaminaBarTxt;
 
 #[derive(Component)]
 pub struct HealthBarTxt;
+
+#[derive(Component)]
+pub struct GameTimeDisplay;
+
+#[derive(Component)]
+pub struct GameTimeDisplayTxt;
