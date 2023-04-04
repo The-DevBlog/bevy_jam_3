@@ -12,13 +12,13 @@ use crate::AppState;
 pub const ENEMY_SPAWN_TIME: f32 = 1.5;
 pub const ENEMY_SPEED: f32 = 2.5;
 pub const ENEMY_HP: f32 = 100.0;
+pub const ENEMY_SIZE: f32 = 0.5;
 
 pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<EnemySpawnTimer>().add_systems(
-            (spawn_enemies, enemy_tracking, enemy_collision).in_set(OnUpdate(AppState::Game)),
-        );
+        app.init_resource::<EnemySpawnTimer>()
+            .add_systems((spawn_enemies, enemy_tracking).in_set(OnUpdate(AppState::Game)));
     }
 }

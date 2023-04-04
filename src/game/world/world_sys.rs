@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
 use crate::game::game_cmps::Game;
 
@@ -19,6 +20,7 @@ pub fn spawn_ground(
             ..default()
         },
         Game,
+        Collider::cuboid(MAP_SIZE / 2.0, 0.0, MAP_SIZE / 2.0),
         Name::new("Ground"),
     ));
 }

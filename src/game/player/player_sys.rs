@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
 use super::{player_cmps::*, PLAYER_HP, PLAYER_SIZE, PLAYER_SPEED, PLAYER_STAMINA, SPRINT_SPEED};
 use crate::game::camera::camera_cmps::CustomCamera;
@@ -18,14 +19,16 @@ pub fn spawn_player(
                 transform: Transform::from_xyz(0.0, 0.25, 0.0),
                 ..default()
             },
+            Collider::cuboid(PLAYER_SIZE / 2.0, PLAYER_SIZE / 2.0, PLAYER_SIZE / 2.0),
+            Damage::new(25.0),
+            Hp(PLAYER_HP),
+            Game,
+            IsSprinting(false),
+            Name::new("Player"),
             Player,
+            RigidBody::Fixed,
             Speed(PLAYER_SPEED),
             Stamina::new(PLAYER_STAMINA),
-            Hp(PLAYER_HP),
-            IsSprinting(false),
-            Damage::new(25.0),
-            Game,
-            Name::new("Player"),
         ))
         .id();
 

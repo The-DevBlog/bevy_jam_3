@@ -11,6 +11,10 @@ pub mod powerups;
 pub mod projectile;
 pub mod world;
 
+use bevy_rapier3d::{
+    prelude::{NoUserData, RapierPhysicsPlugin},
+    render::RapierDebugRenderPlugin,
+};
 use camera::CameraPlugin;
 use enemy::EnemyPlugin;
 use game_sys::*;
@@ -27,7 +31,9 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugin(WorldPlugin)
+        app.add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
+            .add_plugin(RapierDebugRenderPlugin::default())
+            .add_plugin(WorldPlugin)
             .add_plugin(PowerUpsPlugin)
             .add_plugin(CameraPlugin)
             .add_plugin(PlayerPlugin)

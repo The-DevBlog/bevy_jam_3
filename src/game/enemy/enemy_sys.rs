@@ -1,4 +1,5 @@
-use bevy::{ecs::query::QueryIter, prelude::*};
+use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 use rand::Rng;
 
 use crate::game::{
@@ -7,11 +8,7 @@ use crate::game::{
     world::MAP_SIZE,
 };
 
-use super::{
-    enemy_cmps::{CircularCollider, Enemy},
-    enemy_res::EnemySpawnTimer,
-    ENEMY_HP, ENEMY_SPEED,
-};
+use super::{enemy_cmps::Enemy, enemy_res::EnemySpawnTimer, ENEMY_HP, ENEMY_SIZE, ENEMY_SPEED};
 
 pub fn spawn_enemies(
     mut cmds: Commands,
@@ -29,23 +26,25 @@ pub fn spawn_enemies(
     let z = rng.gen_range(-map_bounds..=map_bounds);
 
     if spawn_timer.0.finished() {
+        let size_half = ENEMY_SIZE / 2.0;
         cmds.spawn((
             PbrBundle {
                 material: materials.add(Color::RED.into()),
                 mesh: meshes.add(Mesh::from(shape::Capsule {
-                    radius: 0.25,
-                    depth: 0.25,
+                    radius: size_half,
+                    depth: size_half,
                     ..default()
                 })),
-                transform: Transform::from_xyz(x, 0.3, z),
+                transform: Transform::from_xyz(x, 0.5, z),
                 ..default()
             },
+            Collider::cuboid(size_half, size_half, size_half),
             Enemy,
-            CircularCollider(0.25),
-            Speed(ENEMY_SPEED),
-            Hp(ENEMY_HP),
             Game,
+            Hp(ENEMY_HP),
             Name::new("Enemy"),
+            RigidBody::Dynamic,
+            Speed(ENEMY_SPEED),
         ));
     }
 }
@@ -64,38 +63,3 @@ pub fn enemy_tracking(
         }
     }
 }
-
-pub fn enemy_collision(// mut enemy_q: Query<(&mut Transform, &CircularCollider), With<Enemy>>,
-    // q_2: QueryIter<&CircularCollider, With<Enemy>>,
-) {
-    // let count = q_2.count();
-    // let count = enemy_q.iter().count();
-    // println!("ENEMIES: {}", count);
-}
-
-// pub fn enemy_collision(mut query: Query<&mut Transform, With<Enemy>>) {
-//     let mut transforms: Vec<Transform> = query.iter_mut().map(|t| *t).collect();
-
-//     for (i, mut transform1) in transforms.iter().enumerate() {
-//         for mut transform2 in transforms.iter().skip(i + 1) {
-//             let distance = transform1.translation.distance(transform2.translation);
-
-//             if distance < 0.5 {
-//                 let direction = (transform1.translation - transform2.translation).normalize();
-//                 let delta_translation = direction * (1.0 - distance) / 2.0;
-
-//                 // Adjust the translation of the first transform
-//                 let mut new_translation = transform1.translation + delta_translation;
-//                 new_translation.y = transform1.translation.y; // maintain the same height
-//                 transform1.translation = new_translation;
-//                 // query.get_mut(transforms[i].entity).unwrap().translation = new_translation;
-
-//                 // Adjust the translation of the second transform
-//                 let mut new_translation = transform2.translation - delta_translation;
-//                 new_translation.y = transform2.translation.y; // maintain the same height
-//                 transform2.translation = new_translation;
-//                 // query.get_mut(transforms[i + 1].entity).unwrap().translation = new_translation;
-//             }
-//         }
-//     }
-// }

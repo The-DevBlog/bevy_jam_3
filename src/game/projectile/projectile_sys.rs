@@ -11,7 +11,7 @@ use crate::game::{
 
 use super::{projectile_cmps::Projectile, projectile_res::FireRate, PROJECTILE_SPEED};
 
-pub fn shoot_gamepad(
+pub fn shoot_projectile(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
@@ -36,7 +36,7 @@ pub fn shoot_gamepad(
         // Get the camera's forward direction vector on the xz plane
         let cam_trans = cam_q.iter().next().unwrap();
 
-        if btns.pressed(right_trigger) || mouse.just_pressed(MouseButton::Left) {
+        if btns.pressed(right_trigger) || mouse.pressed(MouseButton::Left) {
             let projectile = (
                 PbrBundle {
                     material: materials.add(Color::YELLOW.into()),

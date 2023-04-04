@@ -17,7 +17,7 @@ impl Plugin for ProjectilePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<FireRate>().add_systems(
             (
-                shoot_gamepad,
+                shoot_projectile,
                 move_projectile,
                 dmg_enemy,
                 despawn_projectile,
