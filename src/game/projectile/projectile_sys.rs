@@ -1,12 +1,14 @@
 use bevy::prelude::*;
 
-use crate::game::{
-    camera::camera_cmps::CustomCamera,
-    enemy::enemy_cmps::Enemy,
-    game_cmps::{Damage, Game, Hp},
+use crate::{
+    game::{
+        camera::camera_cmps::CustomCamera,
+        enemy::enemy_cmps::Enemy,
+        game_cmps::{Damage, Game, Hp},
+        player::player_cmps::Player,
+        world::MAP_SIZE,
+    },
     gamepad::gamepad_rcs::MyGamepad,
-    player::player_cmps::Player,
-    world::MAP_SIZE,
 };
 
 use super::{projectile_cmps::Projectile, projectile_res::FireRate, PROJECTILE_SPEED};

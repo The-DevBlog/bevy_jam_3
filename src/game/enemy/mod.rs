@@ -4,10 +4,9 @@ pub mod enemy_cmps;
 pub mod enemy_res;
 mod enemy_sys;
 
+use crate::AppState;
 use enemy_res::*;
 use enemy_sys::*;
-
-use crate::AppState;
 
 pub const ENEMY_SPAWN_TIME: f32 = 1.5;
 pub const ENEMY_SPEED: f32 = 2.5;

@@ -4,8 +4,9 @@ use bevy::{
     window::PrimaryWindow,
 };
 
+use crate::gamepad::gamepad_rcs::MyGamepad;
+
 use super::camera_cmps::CustomCamera;
-use crate::game::gamepad::gamepad_rcs::MyGamepad;
 
 // heavily referenced https://bevy-cheatbook.github.io/cookbook/pan-orbit-camera.html
 pub fn orbit_mouse(

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{game::gamepad::gamepad_rcs::MyGamepad, AppState};
+use crate::{gamepad::gamepad_rcs::MyGamepad, AppState};
 
 use super::{
     main_menu_cmps::{MainMenu, MainMenuCamera, PlayBtn},
