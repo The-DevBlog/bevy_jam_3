@@ -20,3 +20,6 @@ impl Damage {
         }
     }
 }
+
+#[derive(Component)]
+pub struct Game;

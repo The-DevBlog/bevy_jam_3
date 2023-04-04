@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::game::{
     camera::camera_cmps::CustomCamera,
     enemy::enemy_cmps::Enemy,
-    game_cmps::{Damage, Hp},
+    game_cmps::{Damage, Game, Hp},
     gamepad::gamepad_rcs::MyGamepad,
     player::player_cmps::Player,
     world::MAP_SIZE,
@@ -52,6 +52,7 @@ pub fn shoot_gamepad(
                         cam_transform.translation.z,
                     ),
                 },
+                Game,
             ));
         }
     }
@@ -67,7 +68,7 @@ pub fn move_projectile(
     }
 }
 
-pub fn damage_enemy(
+pub fn dmg_enemy(
     mut cmds: Commands,
     player_q: Query<&Damage, (With<Player>, Without<Enemy>)>,
     mut enemy_q: Query<(Entity, &Transform, &mut Hp), With<Enemy>>,

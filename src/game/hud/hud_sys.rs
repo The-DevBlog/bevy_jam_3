@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 
 use super::hud_cmps::*;
-use crate::game::{game_cmps::Hp, player::player_cmps::*};
+use crate::game::{
+    game_cmps::{Game, Hp},
+    player::player_cmps::*,
+};
 
 fn new_txt(assets: &Res<AssetServer>) -> TextBundle {
     TextBundle::from_section(
@@ -50,7 +53,7 @@ pub fn spawn_health_bar(mut cmds: Commands, assets: Res<AssetServer>) {
 
     let txt = new_txt(&assets);
 
-    cmds.spawn((container, HealthBarContainer, Name::new("Health Bar")))
+    cmds.spawn((container, HealthBarContainer, Name::new("Health Bar"), Game))
         .with_children(|parent| {
             parent.spawn(fill);
             parent.spawn((txt, HealthBarTxt, Name::new("Health Bar Text")));
@@ -77,11 +80,16 @@ pub fn spawn_stamina_bar(mut cmds: Commands, assets: Res<AssetServer>) {
 
     let txt = new_txt(&assets);
 
-    cmds.spawn((container, StaminaBarContainer, Name::new("Stamina Bar")))
-        .with_children(|parent| {
-            parent.spawn(fill);
-            parent.spawn((txt, StaminaBarTxt, Name::new("Stamina Bar Text")));
-        });
+    cmds.spawn((
+        container,
+        StaminaBarContainer,
+        Name::new("Stamina Bar"),
+        Game,
+    ))
+    .with_children(|parent| {
+        parent.spawn(fill);
+        parent.spawn((txt, StaminaBarTxt, Name::new("Stamina Bar Text")));
+    });
 }
 
 pub fn update_stamina_bar(

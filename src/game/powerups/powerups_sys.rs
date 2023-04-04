@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use rand::Rng;
 
 use crate::game::{
-    game_cmps::Damage,
+    game_cmps::{Damage, Game},
     player::{
         player_cmps::{Player, Stamina},
         PLAYER_SIZE,
@@ -51,6 +51,7 @@ pub fn spawn_powerups(
                 cmds.spawn((
                     powerup(Color::GREEN),
                     StaminaPowerUp,
+                    Game,
                     Name::new("Stamina PowerUp"),
                 ));
             }
@@ -58,6 +59,7 @@ pub fn spawn_powerups(
                 cmds.spawn((
                     powerup(Color::RED),
                     HealthPowerUp,
+                    Game,
                     Name::new("Health PowerUp"),
                 ));
             }
@@ -65,6 +67,7 @@ pub fn spawn_powerups(
                 cmds.spawn((
                     powerup(Color::YELLOW),
                     DamagePowerUp,
+                    Game,
                     Name::new("Damage PowerUp"),
                 ));
             }
@@ -93,7 +96,7 @@ pub fn collect_stamina_powerup(
     }
 }
 
-pub fn collect_damage_powerup(
+pub fn collect_dmg_powerup(
     mut cmds: Commands,
     mut player_q: Query<(&Transform, &mut Damage), With<Player>>,
     powerup_q: Query<(Entity, &Transform), With<DamagePowerUp>>,
@@ -117,7 +120,7 @@ pub fn collect_damage_powerup(
     }
 }
 
-pub fn tick_damage_duration_timer(
+pub fn tick_dmg_duration_timer(
     mut player_q: Query<&mut Damage, With<Player>>,
     time: Res<Time>,
     mut duration_res: ResMut<DamageDuration>,

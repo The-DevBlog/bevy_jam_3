@@ -3,6 +3,7 @@ use bevy::prelude::*;
 pub mod camera;
 pub mod enemy;
 pub mod game_cmps;
+mod game_sys;
 pub mod gamepad;
 pub mod hud;
 pub mod player;
@@ -12,12 +13,15 @@ pub mod world;
 
 use camera::CameraPlugin;
 use enemy::EnemyPlugin;
+use game_sys::*;
 use gamepad::GamepadPlugin;
 use hud::HudPlugin;
 use player::PlayerPlugin;
 use powerups::PowerUpsPlugin;
 use projectile::ProjectilePlugin;
 use world::WorldPlugin;
+
+use crate::AppState;
 
 pub struct GamePlugin;
 
@@ -30,6 +34,8 @@ impl Plugin for GamePlugin {
             .add_plugin(ProjectilePlugin)
             .add_plugin(EnemyPlugin)
             .add_plugin(GamepadPlugin)
-            .add_plugin(HudPlugin);
+            .add_plugin(HudPlugin)
+            .add_system(exit_game.in_set(OnUpdate(AppState::Game)))
+            .add_system(despawn_game.in_schedule(OnExit(AppState::Game)));
     }
 }

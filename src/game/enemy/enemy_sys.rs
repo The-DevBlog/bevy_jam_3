@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use rand::Rng;
 
 use crate::game::{
-    game_cmps::{Hp, Speed},
+    game_cmps::{Game, Hp, Speed},
     world::MAP_SIZE,
 };
 
@@ -39,6 +39,7 @@ pub fn spawn_enemies(
             Speed(ENEMY_SPEED),
             Hp(ENEMY_HP),
             Name::new("Enemy"),
+            Game,
         ));
     }
 }

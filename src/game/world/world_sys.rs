@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::game::game_cmps::Game;
+
 use super::MAP_SIZE;
 
 pub fn spawn_ground(
@@ -16,6 +18,7 @@ pub fn spawn_ground(
             material: materials.add(Color::GRAY.into()),
             ..default()
         },
+        Game,
         Name::new("Ground"),
     ));
 }
@@ -30,6 +33,7 @@ pub fn spawn_light(mut cmds: Commands) {
             transform: Transform::from_xyz(0.0, 5.0, 0.0),
             ..default()
         },
+        Game,
         Name::new("Point Light"),
     ));
 }
