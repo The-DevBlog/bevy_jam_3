@@ -81,11 +81,9 @@ pub fn collect_stamina_powerup(
     mut player_q: Query<(&mut Stamina, &Transform), With<Player>>,
     powerup_q: Query<(Entity, &Transform), With<StaminaPowerUp>>,
 ) {
-    for (powerup_ent, powerup_transform) in powerup_q.iter() {
-        for (mut stamina, player_transform) in player_q.iter_mut() {
-            let distance = powerup_transform
-                .translation
-                .distance(player_transform.translation);
+    for (powerup_ent, powerup_trans) in powerup_q.iter() {
+        for (mut stamina, player_trans) in player_q.iter_mut() {
+            let distance = powerup_trans.translation.distance(player_trans.translation);
 
             // collect powerup and despawn
             if distance < PLAYER_SIZE {
@@ -102,11 +100,9 @@ pub fn collect_dmg_powerup(
     powerup_q: Query<(Entity, &Transform), With<DamagePowerUp>>,
     mut duration_res: ResMut<DamageDuration>,
 ) {
-    for (powerup_ent, powerup_transform) in powerup_q.iter() {
-        for (player_transform, mut dmg) in player_q.iter_mut() {
-            let distance = powerup_transform
-                .translation
-                .distance(player_transform.translation);
+    for (powerup_ent, powerup_trans) in powerup_q.iter() {
+        for (player_trans, mut dmg) in player_q.iter_mut() {
+            let distance = powerup_trans.translation.distance(player_trans.translation);
 
             // collect powerup and despawn
             if distance < PLAYER_SIZE {

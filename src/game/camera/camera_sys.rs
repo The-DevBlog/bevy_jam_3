@@ -18,7 +18,7 @@ pub fn orbit_mouse(
         rotation = ev.delta;
     }
 
-    for (cam, mut transform) in cam_q.iter_mut() {
+    for (cam, mut trans) in cam_q.iter_mut() {
         if rotation.length_squared() > 0.0 {
             let window = window_q.get_single().unwrap();
             let delta_x = {
@@ -33,12 +33,12 @@ pub fn orbit_mouse(
             let delta_y = rotation.y / window.height() * std::f32::consts::PI;
             let yaw = Quat::from_rotation_y(-delta_x);
             let pitch = Quat::from_rotation_x(-delta_y);
-            transform.rotation = yaw * transform.rotation; // rotate around global y axis
-            transform.rotation = transform.rotation * pitch;
+            trans.rotation = yaw * trans.rotation; // rotate around global y axis
+            trans.rotation = trans.rotation * pitch;
         }
 
-        let rot_matrix = Mat3::from_quat(transform.rotation);
-        transform.translation = cam.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, cam.radius));
+        let rot_matrix = Mat3::from_quat(trans.rotation);
+        trans.translation = cam.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, cam.radius));
     }
 }
 
@@ -66,7 +66,7 @@ pub fn orbit_gamepad(
         }
     }
 
-    for (cam, mut transform) in cam_q.iter_mut() {
+    for (cam, mut trans) in cam_q.iter_mut() {
         if rotation.length_squared() > 0.0 {
             let window = window_q.get_single().unwrap();
             let delta_x = {
@@ -84,12 +84,12 @@ pub fn orbit_gamepad(
                 -rotation.y / window.height() * std::f32::consts::PI * gamepad.sensitivity.1;
             let yaw = Quat::from_rotation_y(-delta_x);
             let pitch = Quat::from_rotation_x(-delta_y);
-            transform.rotation = yaw * transform.rotation; // rotate around global y axis
-            transform.rotation = transform.rotation * pitch;
+            trans.rotation = yaw * trans.rotation; // rotate around global y axis
+            trans.rotation = trans.rotation * pitch;
         }
 
-        let rot_matrix = Mat3::from_quat(transform.rotation);
-        transform.translation = cam.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, cam.radius));
+        let rot_matrix = Mat3::from_quat(trans.rotation);
+        trans.translation = cam.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, cam.radius));
     }
 }
 

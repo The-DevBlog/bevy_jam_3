@@ -55,7 +55,7 @@ pub fn move_player_keyboard(
     mut player_q: Query<(&mut Transform, &Speed, &mut IsSprinting), With<Player>>,
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
 ) {
-    for (mut transform, speed, mut sprinting) in player_q.iter_mut() {
+    for (mut trans, speed, mut sprinting) in player_q.iter_mut() {
         let cam = match cam_q.get_single() {
             Ok(c) => c,
             Err(e) => Err(format!("Error retrieving camera: {}", e)).unwrap(),
@@ -91,7 +91,7 @@ pub fn move_player_keyboard(
         }
 
         direction.y = 0.0;
-        transform.translation += speed.0 * sprint * direction * time.delta_seconds();
+        trans.translation += speed.0 * sprint * direction * time.delta_seconds();
     }
 }
 
@@ -125,7 +125,7 @@ pub fn move_player_gamepad(
         left_joystick = Vec2::new(x, y);
     }
 
-    for (mut transform, speed, mut sprinting, stamina) in player_q.iter_mut() {
+    for (mut trans, speed, mut sprinting, stamina) in player_q.iter_mut() {
         let cam = match cam_q.get_single() {
             Ok(c) => c,
             Err(e) => Err(format!("Error retrieving camera: {}", e)).unwrap(),
@@ -154,7 +154,7 @@ pub fn move_player_gamepad(
         }
 
         direction.y = 0.0;
-        transform.translation += speed.0 * sprint * direction * time.delta_seconds();
+        trans.translation += speed.0 * sprint * direction * time.delta_seconds();
     }
 }
 

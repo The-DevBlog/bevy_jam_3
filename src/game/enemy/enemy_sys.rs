@@ -3,6 +3,7 @@ use rand::Rng;
 
 use crate::game::{
     game_cmps::{Game, Hp, Speed},
+    player::player_cmps::Player,
     world::MAP_SIZE,
 };
 
@@ -41,5 +42,20 @@ pub fn spawn_enemies(
             Name::new("Enemy"),
             Game,
         ));
+    }
+}
+
+/// enemies track towards player
+pub fn enemy_tracking(
+    mut enemy_q: Query<(&mut Transform, &Speed), With<Enemy>>,
+    player: Query<&Transform, (With<Player>, Without<Enemy>)>,
+    time: Res<Time>,
+) {
+    for (mut enemy_trans, enemy_speed) in enemy_q.iter_mut() {
+        if let Ok(player_trans) = player.get_single() {
+            let direction = (player_trans.translation - enemy_trans.translation).normalize();
+
+            enemy_trans.translation += direction * enemy_speed.0 * time.delta_seconds();
+        }
     }
 }

@@ -28,12 +28,12 @@ pub fn shoot_gamepad(
         return;
     };
 
-    if let Ok(transform) = player_q.get_single() {
+    if let Ok(player_trans) = player_q.get_single() {
         let right_trigger = GamepadButton::new(gamepad, GamepadButtonType::RightTrigger2);
 
         if btns.just_pressed(right_trigger) || mouse.just_pressed(MouseButton::Left) {
             // Get the camera's forward direction vector on the xz plane
-            let cam_transform = cam_q.iter().next().unwrap();
+            let cam_trans = cam_q.iter().next().unwrap();
 
             cmds.spawn((
                 PbrBundle {
@@ -42,15 +42,11 @@ pub fn shoot_gamepad(
                         radius: 0.025,
                         ..default()
                     })),
-                    transform: Transform::from_translation(transform.translation),
+                    transform: Transform::from_translation(player_trans.translation),
                     ..default()
                 },
                 Projectile {
-                    direction: Vec3::new(
-                        cam_transform.translation.x,
-                        0.0,
-                        cam_transform.translation.z,
-                    ),
+                    direction: Vec3::new(cam_trans.translation.x, 0.0, cam_trans.translation.z),
                 },
                 Game,
             ));
@@ -62,8 +58,8 @@ pub fn move_projectile(
     mut projectile_q: Query<(&mut Transform, &Projectile), With<Projectile>>,
     time: Res<Time>,
 ) {
-    for (mut transform, projectile) in projectile_q.iter_mut() {
-        transform.translation -=
+    for (mut trans, projectile) in projectile_q.iter_mut() {
+        trans.translation -=
             projectile.direction.normalize() * PROJECTILE_SPEED * time.delta_seconds();
     }
 }
@@ -74,11 +70,11 @@ pub fn dmg_enemy(
     mut enemy_q: Query<(Entity, &Transform, &mut Hp), With<Enemy>>,
     projectile_q: Query<(Entity, &Transform), With<Projectile>>,
 ) {
-    for (enemy_ent, enemy_transform, mut enemy_hp) in enemy_q.iter_mut() {
-        for (projectile_ent, projectile_transform) in projectile_q.iter() {
-            let distance = enemy_transform
+    for (enemy_ent, enemy_trans, mut enemy_hp) in enemy_q.iter_mut() {
+        for (projectile_ent, projectile_trans) in projectile_q.iter() {
+            let distance = enemy_trans
                 .translation
-                .distance(projectile_transform.translation);
+                .distance(projectile_trans.translation);
 
             let dmg = player_q.get_single().unwrap();
 
@@ -102,9 +98,8 @@ pub fn despawn_projectile(
     mut cmds: Commands,
     projectile_q: Query<(Entity, &Transform), With<Projectile>>,
 ) {
-    for (ent, transform) in projectile_q.iter() {
-        if transform.translation.x.abs() > MAP_SIZE / 2.0
-            || transform.translation.z.abs() > MAP_SIZE / 2.0
+    for (ent, trans) in projectile_q.iter() {
+        if trans.translation.x.abs() > MAP_SIZE / 2.0 || trans.translation.z.abs() > MAP_SIZE / 2.0
         {
             cmds.entity(ent).despawn_recursive();
         }

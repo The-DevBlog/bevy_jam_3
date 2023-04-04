@@ -18,6 +18,6 @@ pub struct EnemyPlugin;
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<EnemySpawnTimer>()
-            .add_system(spawn_enemies.in_set(OnUpdate(AppState::Game)));
+            .add_systems((spawn_enemies, enemy_tracking).in_set(OnUpdate(AppState::Game)));
     }
 }
