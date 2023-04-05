@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 
+pub mod world_res;
 mod world_sys;
 
+use world_res::*;
 use world_sys::*;
 
 use crate::AppState;
@@ -12,6 +14,9 @@ pub struct WorldPlugin;
 
 impl Plugin for WorldPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems((spawn_ground, spawn_light).in_schedule(OnEnter(AppState::Game)));
+        app.init_resource::<LightTimer>()
+            .init_resource::<Colors>()
+            .add_systems((spawn_ground, spawn_light).in_schedule(OnEnter(AppState::Game)))
+            .add_system(change_light_clr.in_set(OnUpdate(AppState::Game)));
     }
 }

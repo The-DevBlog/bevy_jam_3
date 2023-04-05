@@ -19,7 +19,7 @@ impl Plugin for ProjectilePlugin {
             (
                 shoot_projectile,
                 move_projectile,
-                dmg_enemy,
+                hit_enemy,
                 despawn_projectile,
             )
                 .in_set(OnUpdate(AppState::Game)),

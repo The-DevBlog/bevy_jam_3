@@ -88,7 +88,7 @@ pub fn move_projectile(
     }
 }
 
-pub fn dmg_enemy(
+pub fn hit_enemy(
     mut cmds: Commands,
     audio: Res<Audio>,
     assets: Res<AssetServer>,
