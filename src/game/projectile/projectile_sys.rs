@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use rand::Rng;
 
 use crate::{
     game::{
@@ -15,15 +16,17 @@ use super::{projectile_cmps::Projectile, projectile_res::FireRate, PROJECTILE_SP
 
 pub fn shoot_projectile(
     mut cmds: Commands,
+    time: Res<Time>,
+    btns: Res<Input<GamepadButton>>,
+    mouse: Res<Input<MouseButton>>,
+    audio: Res<Audio>,
+    assets: Res<AssetServer>,
+    mut fire_rate: ResMut<FireRate>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    my_gamepad: Option<Res<MyGamepad>>,
     player_q: Query<&Transform, With<Player>>,
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
-    btns: Res<Input<GamepadButton>>,
-    my_gamepad: Option<Res<MyGamepad>>,
-    mouse: Res<Input<MouseButton>>,
-    mut fire_rate: ResMut<FireRate>,
-    time: Res<Time>,
 ) {
     // return id of gamepad if one is connected
     let gamepad = if let Some(gp) = my_gamepad {
@@ -39,24 +42,33 @@ pub fn shoot_projectile(
         let cam_trans = cam_q.iter().next().unwrap();
 
         if btns.pressed(right_trigger) || mouse.pressed(MouseButton::Left) {
-            let projectile = (
-                PbrBundle {
-                    material: materials.add(Color::YELLOW.into()),
-                    mesh: meshes.add(Mesh::from(shape::UVSphere {
-                        radius: 0.025,
-                        ..default()
-                    })),
-                    transform: Transform::from_translation(player_trans.translation),
-                    ..default()
-                },
-                Projectile {
-                    direction: Vec3::new(cam_trans.translation.x, 0.0, cam_trans.translation.z),
-                },
-                Game,
-            );
-
             if fire_rate.0.finished() || fire_rate.0.percent_left() == 1.0 {
+                let projectile = (
+                    PbrBundle {
+                        material: materials.add(Color::YELLOW.into()),
+                        mesh: meshes.add(Mesh::from(shape::UVSphere {
+                            radius: 0.025,
+                            ..default()
+                        })),
+                        transform: Transform::from_translation(player_trans.translation),
+                        ..default()
+                    },
+                    Projectile {
+                        direction: Vec3::new(cam_trans.translation.x, 0.0, cam_trans.translation.z),
+                    },
+                    Game,
+                );
+
                 cmds.spawn(projectile);
+
+                let sound = assets.load("audio/shoot.ogg");
+                audio.play_with_settings(
+                    sound,
+                    PlaybackSettings {
+                        volume: 0.5,
+                        ..default()
+                    },
+                );
             }
 
             fire_rate.0.tick(time.delta());
@@ -67,8 +79,8 @@ pub fn shoot_projectile(
 }
 
 pub fn move_projectile(
-    mut projectile_q: Query<(&mut Transform, &Projectile), With<Projectile>>,
     time: Res<Time>,
+    mut projectile_q: Query<(&mut Transform, &Projectile), With<Projectile>>,
 ) {
     for (mut trans, projectile) in projectile_q.iter_mut() {
         trans.translation -=
@@ -78,6 +90,8 @@ pub fn move_projectile(
 
 pub fn dmg_enemy(
     mut cmds: Commands,
+    audio: Res<Audio>,
+    assets: Res<AssetServer>,
     player_q: Query<&Damage, (With<Player>, Without<Enemy>)>,
     mut enemy_q: Query<(Entity, &Transform, &mut Hp), With<Enemy>>,
     projectile_q: Query<(Entity, &Transform), With<Projectile>>,
@@ -95,6 +109,11 @@ pub fn dmg_enemy(
                 // enemy_hp.0 -= projectile_dmg.damage;
                 enemy_hp.value -= dmg.value;
                 cmds.entity(projectile_ent).despawn_recursive();
+
+                let num = rand::thread_rng().gen_range(0..=4);
+                let file = format!(r"audio\enemy\hurt_{}.ogg", num);
+                let sound = assets.load(file);
+                audio.play(sound);
             }
 
             // despawn enemy

@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
-use super::POWERUP_SPAWN_TIME;
+use super::*;
 
 #[derive(Resource)]
 pub struct PowerUpSpawnTime(pub Timer);
@@ -21,7 +21,7 @@ pub struct DamageDuration(pub Timer);
 
 impl Default for DamageDuration {
     fn default() -> Self {
-        let mut duration = Timer::new(Duration::from_secs(5), TimerMode::Once);
+        let mut duration = Timer::new(Duration::from_secs(DMG_BOOST_DURATION), TimerMode::Once);
         duration.pause();
         DamageDuration(duration)
     }

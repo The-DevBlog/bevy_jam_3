@@ -3,7 +3,6 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
-- Health power up
 - Sounds effects
   - Shoot
   - Enemy hit
