@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use rand::Rng;
 
 use crate::game::{
-    game_cmps::{Damage, Game},
+    game_cmps::{Damage, Game, Hp},
     player::{
         player_cmps::{Player, Stamina},
         PLAYER_SIZE,
@@ -11,9 +11,9 @@ use crate::game::{
 };
 
 use super::{
-    powerups_cmps::{DamagePowerUp, HealthPowerUp, StaminaPowerUp},
+    powerups_cmps::{DamagePowerUp, HpPowerUp, StaminaPowerUp},
     powerups_res::{DamageDuration, PowerUpSpawnTime},
-    DMG_BOOST,
+    DMG_BOOST, HP_BOOST,
 };
 
 pub fn spawn_powerups(
@@ -58,7 +58,7 @@ pub fn spawn_powerups(
             2 => {
                 cmds.spawn((
                     powerup(Color::RED),
-                    HealthPowerUp,
+                    HpPowerUp,
                     Game,
                     Name::new("Health PowerUp"),
                 ));
@@ -87,7 +87,7 @@ pub fn collect_stamina_powerup(
 
             // collect powerup and despawn
             if distance < PLAYER_SIZE {
-                stamina.current = stamina.max;
+                stamina.value = stamina.max;
                 cmds.entity(powerup_ent).despawn_recursive();
             }
         }
@@ -110,7 +110,30 @@ pub fn collect_dmg_powerup(
                 duration_res.0.unpause();
                 cmds.entity(powerup_ent).despawn_recursive();
 
-                dmg.current = dmg.value + DMG_BOOST;
+                dmg.value = dmg.max + DMG_BOOST;
+            }
+        }
+    }
+}
+
+pub fn collect_hp_powerup(
+    mut cmds: Commands,
+    mut player_q: Query<(&Transform, &mut Hp), With<Player>>,
+    powerup_q: Query<(Entity, &Transform), With<HpPowerUp>>,
+) {
+    for (powerup_ent, powerup_trans) in powerup_q.iter() {
+        for (player_trans, mut hp) in player_q.iter_mut() {
+            let distance = powerup_trans.translation.distance(player_trans.translation);
+
+            // collect powerup and despawn
+            if distance < PLAYER_SIZE {
+                if hp.value + HP_BOOST > hp.max {
+                    hp.value = hp.max;
+                } else {
+                    hp.value += HP_BOOST;
+                }
+
+                cmds.entity(powerup_ent).despawn_recursive();
             }
         }
     }
@@ -125,7 +148,7 @@ pub fn tick_dmg_duration_timer(
 
     if duration_res.0.finished() {
         if let Ok(mut dmg) = player_q.get_single_mut() {
-            dmg.current = dmg.value;
+            dmg.value = dmg.max;
         }
 
         duration_res.0.reset();

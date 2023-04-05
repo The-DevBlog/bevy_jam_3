@@ -47,7 +47,7 @@ pub fn spawn_enemies(
             Damage::new(10.0),
             Enemy,
             Game,
-            Hp(ENEMY_HP),
+            Hp::new(ENEMY_HP),
             Name::new("Enemy"),
             RigidBody::Dynamic,
             Speed(ENEMY_SPEED),
@@ -81,7 +81,7 @@ pub fn enemy_attack(
 
             if distance < 0.8 {
                 if attack_rate.0.finished() || attack_rate.0.percent_left() == 1.0 {
-                    player_hp.0 -= enemy_dmg.current;
+                    player_hp.value -= enemy_dmg.value;
                 }
                 attack_rate.0.tick(time.delta());
             } else {

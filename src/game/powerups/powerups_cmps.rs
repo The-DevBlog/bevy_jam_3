@@ -4,7 +4,7 @@ use bevy::prelude::*;
 pub struct StaminaPowerUp;
 
 #[derive(Component)]
-pub struct HealthPowerUp;
+pub struct HpPowerUp;
 
 #[derive(Component)]
 pub struct DamagePowerUp;

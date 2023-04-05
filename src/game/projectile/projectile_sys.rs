@@ -93,12 +93,12 @@ pub fn dmg_enemy(
             // reduce enemy hp and despawn projectile
             if distance < 0.25 {
                 // enemy_hp.0 -= projectile_dmg.damage;
-                enemy_hp.0 -= dmg.current;
+                enemy_hp.value -= dmg.value;
                 cmds.entity(projectile_ent).despawn_recursive();
             }
 
             // despawn enemy
-            if enemy_hp.0 <= 0.0 {
+            if enemy_hp.value <= 0.0 {
                 cmds.entity(enemy_ent).despawn_recursive();
             }
         }

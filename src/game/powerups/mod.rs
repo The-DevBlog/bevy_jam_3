@@ -11,6 +11,7 @@ use crate::AppState;
 
 pub const POWERUP_SPAWN_TIME: f32 = 2.0;
 pub const DMG_BOOST: f32 = 25.0;
+pub const HP_BOOST: f32 = 20.0;
 
 pub struct PowerUpsPlugin;
 
@@ -23,6 +24,7 @@ impl Plugin for PowerUpsPlugin {
                     spawn_powerups,
                     collect_stamina_powerup,
                     collect_dmg_powerup,
+                    collect_hp_powerup,
                     tick_dmg_duration_timer,
                 )
                     .in_set(OnUpdate(AppState::Game)),

@@ -21,7 +21,7 @@ pub fn spawn_player(
             },
             Collider::cuboid(PLAYER_SIZE / 2.0, PLAYER_SIZE / 2.0, PLAYER_SIZE / 2.0),
             Damage::new(25.0),
-            Hp(PLAYER_HP),
+            Hp::new(PLAYER_HP),
             Game,
             IsSprinting(false),
             Name::new("Player"),
@@ -151,7 +151,7 @@ pub fn move_player_gamepad(
         // sprint
         let mut sprint = 1.0;
         let left_thumb = GamepadButton::new(gamepad, GamepadButtonType::LeftThumb);
-        if btns.pressed(left_thumb) && stamina.current > 0.0 {
+        if btns.pressed(left_thumb) && stamina.value > 0.0 {
             sprint = SPRINT_SPEED;
             sprinting.0 = true;
         }
@@ -167,16 +167,16 @@ pub fn update_stamina(
 ) {
     for (mut stamina, mut sprinting) in player_q.iter_mut() {
         // if sprinting & stamina is greater than zero, drain stamina & reset regen timer
-        if sprinting.0 && stamina.current >= 0.0 {
-            stamina.current -= 0.1;
+        if sprinting.0 && stamina.value >= 0.0 {
+            stamina.value -= 0.1;
             stamina.regen_time.reset();
 
         // if regen timer finished & stamina is less than max, regenerate stamina
-        } else if stamina.regen_time.just_finished() && stamina.current < stamina.max {
-            stamina.current += 0.025;
+        } else if stamina.regen_time.just_finished() && stamina.value < stamina.max {
+            stamina.value += 0.025;
 
         // if stamina is less than the max, tick the regen timer
-        } else if stamina.current < stamina.max {
+        } else if stamina.value < stamina.max {
             stamina.regen_time.tick(time.delta());
         }
 
@@ -186,15 +186,15 @@ pub fn update_stamina(
 
 pub fn update_health(mut player_q: Query<&mut Hp, With<Player>>) {
     if let Ok(mut hp) = player_q.get_single_mut() {
-        if hp.0 < 0.0 {
-            hp.0 = 0.0;
+        if hp.value < 0.0 {
+            hp.value = 0.0;
         }
     }
 }
 
 pub fn player_is_dead(player_q: Query<&Hp, With<Player>>) -> bool {
     if let Ok(hp) = player_q.get_single() {
-        hp.0 <= 0.0
+        hp.value <= 0.0
     } else {
         false
     }
