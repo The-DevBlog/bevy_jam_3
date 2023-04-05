@@ -2,17 +2,15 @@
 - Zombeats
 - Zombie Nightclub
 
-# Back Log (sorted by priority)
-- Display elapsed time on screen
-- Player takes damage
-- Player dies
-- Game Over
-  - Display score
-  - Play again
+# Back Log (by priority)
+- Health power up
 - Sounds effects
   - Shoot
   - Enemy hit
   - Take damage
+- Increase difficulty
+  - Shorten spawn rate after time
+  - Add health after time
 - Texture/Models
   - Enemy
   - Player
@@ -20,4 +18,4 @@
 - Better map
   - expand map
   - add walls/boundaries
-  - add obstacles
+  - add obstacles 

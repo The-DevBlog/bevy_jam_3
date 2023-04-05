@@ -8,15 +8,15 @@ pub struct Speed(pub f32);
 
 #[derive(Component)]
 pub struct Damage {
-    pub original: f32,
+    pub value: f32,
     pub current: f32,
 }
 
 impl Damage {
-    pub fn new(original: f32) -> Self {
+    pub fn new(value: f32) -> Self {
         Self {
-            original,
-            current: original,
+            value,
+            current: value,
         }
     }
 }

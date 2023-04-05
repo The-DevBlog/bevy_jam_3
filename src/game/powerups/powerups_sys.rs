@@ -110,7 +110,7 @@ pub fn collect_dmg_powerup(
                 duration_res.0.unpause();
                 cmds.entity(powerup_ent).despawn_recursive();
 
-                dmg.current = dmg.original + DMG_BOOST;
+                dmg.current = dmg.value + DMG_BOOST;
             }
         }
     }
@@ -125,7 +125,7 @@ pub fn tick_dmg_duration_timer(
 
     if duration_res.0.finished() {
         if let Ok(mut dmg) = player_q.get_single_mut() {
-            dmg.current = dmg.original;
+            dmg.current = dmg.value;
         }
 
         duration_res.0.reset();

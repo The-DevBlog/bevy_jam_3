@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 pub mod player_cmps;
-mod player_sys;
+pub mod player_sys;
 
 use player_sys::*;
 
@@ -19,7 +19,12 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(spawn_player.in_schedule(OnEnter(AppState::Game)))
             .add_systems(
-                (move_player_keyboard, move_player_gamepad, update_stamina)
+                (
+                    move_player_keyboard,
+                    move_player_gamepad,
+                    update_stamina,
+                    update_health,
+                )
                     .in_set(OnUpdate(AppState::Game)),
             );
     }

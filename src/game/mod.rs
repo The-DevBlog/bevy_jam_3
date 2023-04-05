@@ -27,6 +27,8 @@ use world::WorldPlugin;
 
 use crate::AppState;
 
+use self::player::player_sys::player_is_dead;
+
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
@@ -43,6 +45,6 @@ impl Plugin for GamePlugin {
             .add_plugin(HudPlugin)
             .add_system(exit_game.in_set(OnUpdate(AppState::Game)))
             .add_system(despawn_game.in_schedule(OnExit(AppState::Game)))
-            .add_system(tick_game_time.in_set(OnUpdate(AppState::Game)));
+            .add_system(game_over.run_if(player_is_dead));
     }
 }

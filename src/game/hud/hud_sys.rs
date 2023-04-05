@@ -151,12 +151,20 @@ pub fn spawn_time_display(mut cmds: Commands, assets: Res<AssetServer>) {
     });
 }
 
-pub fn update_time_display(
+pub fn update_game_time_display(
     mut time_display_q: Query<&mut Text, With<GameTimeDisplayTxt>>,
-    game_time: Res<GameTime>,
+    mut game_time: ResMut<GameTime>,
+    time: Res<Time>,
 ) {
+    game_time.0.tick(time.delta());
+
     if let Ok(mut txt) = time_display_q.get_single_mut() {
         let time = game_time.0.elapsed().as_secs_f32();
         txt.sections[0].value = format!("{:.2}", time);
     }
+}
+
+/// reset the game time to zero whenever game starts
+pub fn reset_game_time(mut game_time: ResMut<GameTime>) {
+    game_time.0.reset();
 }

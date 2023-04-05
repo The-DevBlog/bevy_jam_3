@@ -3,12 +3,16 @@ use bevy_rapier3d::prelude::*;
 use rand::Rng;
 
 use crate::game::{
-    game_cmps::{Game, Hp, Speed},
+    game_cmps::{Damage, Game, Hp, Speed},
     player::player_cmps::Player,
     world::MAP_SIZE,
 };
 
-use super::{enemy_cmps::Enemy, enemy_res::EnemySpawnTimer, ENEMY_HP, ENEMY_SIZE, ENEMY_SPEED};
+use super::{
+    enemy_cmps::{AttackRate, Enemy},
+    enemy_res::EnemySpawnTimer,
+    ENEMY_HP, ENEMY_SIZE, ENEMY_SPEED,
+};
 
 pub fn spawn_enemies(
     mut cmds: Commands,
@@ -38,7 +42,9 @@ pub fn spawn_enemies(
                 transform: Transform::from_xyz(x, 0.5, z),
                 ..default()
             },
+            AttackRate::default(),
             Collider::cuboid(size_half, size_half, size_half),
+            Damage::new(10.0),
             Enemy,
             Game,
             Hp(ENEMY_HP),
@@ -60,6 +66,27 @@ pub fn enemy_tracking(
             let direction = (player_trans.translation - enemy_trans.translation).normalize();
 
             enemy_trans.translation += direction * enemy_speed.0 * time.delta_seconds();
+        }
+    }
+}
+
+pub fn enemy_attack(
+    mut enemy_q: Query<(&mut Transform, &mut AttackRate, &Damage), With<Enemy>>,
+    mut player: Query<(&Transform, &mut Hp), (With<Player>, Without<Enemy>)>,
+    time: Res<Time>,
+) {
+    for (enemy_trans, mut attack_rate, enemy_dmg) in enemy_q.iter_mut() {
+        if let Ok((player_trans, mut player_hp)) = player.get_single_mut() {
+            let distance = Vec3::distance(enemy_trans.translation, player_trans.translation);
+
+            if distance < 0.8 {
+                if attack_rate.0.finished() || attack_rate.0.percent_left() == 1.0 {
+                    player_hp.0 -= enemy_dmg.current;
+                }
+                attack_rate.0.tick(time.delta());
+            } else {
+                attack_rate.0.reset();
+            }
         }
     }
 }

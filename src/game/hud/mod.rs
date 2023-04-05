@@ -12,11 +12,20 @@ pub struct HudPlugin;
 impl Plugin for HudPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            (spawn_health_bar, spawn_stamina_bar, spawn_time_display)
+            (
+                spawn_health_bar,
+                spawn_stamina_bar,
+                spawn_time_display,
+                reset_game_time,
+            )
                 .in_schedule(OnEnter(AppState::Game)),
         )
         .add_systems(
-            (update_stamina_bar, update_health_bar, update_time_display)
+            (
+                update_stamina_bar,
+                update_health_bar,
+                update_game_time_display,
+            )
                 .in_set(OnUpdate(AppState::Game)),
         );
     }

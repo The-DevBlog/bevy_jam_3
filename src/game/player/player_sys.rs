@@ -183,3 +183,19 @@ pub fn update_stamina(
         sprinting.0 = false;
     }
 }
+
+pub fn update_health(mut player_q: Query<&mut Hp, With<Player>>) {
+    if let Ok(mut hp) = player_q.get_single_mut() {
+        if hp.0 < 0.0 {
+            hp.0 = 0.0;
+        }
+    }
+}
+
+pub fn player_is_dead(player_q: Query<&Hp, With<Player>>) -> bool {
+    if let Ok(hp) = player_q.get_single() {
+        hp.0 <= 0.0
+    } else {
+        false
+    }
+}
