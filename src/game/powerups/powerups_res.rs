@@ -17,12 +17,12 @@ impl Default for PowerUpSpawnTime {
 }
 
 #[derive(Resource)]
-pub struct DamageDuration(pub Timer);
+pub struct DamageBoostDuration(pub Timer);
 
-impl Default for DamageDuration {
+impl Default for DamageBoostDuration {
     fn default() -> Self {
         let mut duration = Timer::new(Duration::from_secs(DMG_BOOST_DURATION), TimerMode::Once);
         duration.pause();
-        DamageDuration(duration)
+        DamageBoostDuration(duration)
     }
 }

@@ -11,8 +11,10 @@ use crate::game::{
 };
 
 use super::{
-    powerups_cmps::{DamagePowerUp, HpPowerUp, PowerUpDisplay, StaminaPowerUp},
-    powerups_res::{DamageDuration, PowerUpSpawnTime},
+    powerups_cmps::{
+        DamagePowerUp, DamagePowerUpDurationDisplay, HpPowerUp, PowerUpDisplay, StaminaPowerUp,
+    },
+    powerups_res::{DamageBoostDuration, PowerUpSpawnTime},
     DMG_BOOST, HP_BOOST,
 };
 
@@ -92,7 +94,7 @@ pub fn collect_stamina_powerup(
                 cmds.entity(powerup_ent).despawn_recursive();
 
                 // spawn txt
-                let txt = create_txt(&assets, "Full Stamina!".to_string());
+                let txt = powerup_txt(&assets, "Full Stamina!".to_string());
                 cmds.spawn((
                     txt,
                     Name::new("Full Stamina Text"),
@@ -109,7 +111,7 @@ pub fn collect_dmg_powerup(
     assets: Res<AssetServer>,
     mut player_q: Query<(&Transform, &mut Damage), With<Player>>,
     powerup_q: Query<(Entity, &Transform), With<DamagePowerUp>>,
-    mut duration_res: ResMut<DamageDuration>,
+    mut duration_res: ResMut<DamageBoostDuration>,
 ) {
     for (powerup_ent, powerup_trans) in powerup_q.iter() {
         for (player_trans, mut dmg) in player_q.iter_mut() {
@@ -124,7 +126,7 @@ pub fn collect_dmg_powerup(
                 dmg.value = dmg.max + DMG_BOOST;
 
                 // spawn txt
-                let txt = create_txt(&assets, "x2 Damage!".to_string());
+                let txt = powerup_txt(&assets, "x2 Damage!".to_string());
                 cmds.spawn((
                     txt,
                     Name::new("x2 Damage Text"),
@@ -157,7 +159,7 @@ pub fn collect_hp_powerup(
                 cmds.entity(powerup_ent).despawn_recursive();
 
                 // spawn txt
-                let txt = create_txt(&assets, format!("+{} health!", HP_BOOST));
+                let txt = powerup_txt(&assets, format!("+{} health!", HP_BOOST));
                 cmds.spawn((
                     txt,
                     Name::new("HP PowerUp Text"),
@@ -169,20 +171,71 @@ pub fn collect_hp_powerup(
     }
 }
 
+pub fn spawn_dmg_powerup_duration_display(mut cmds: Commands, assets: Res<AssetServer>) {
+    let txt = TextBundle {
+        text: Text::from_section(
+            "",
+            TextStyle {
+                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font_size: 25.0,
+                color: Color::WHITE.into(),
+            },
+        ),
+        style: Style {
+            display: Display::None,
+            position: UiRect::new(
+                Val::Percent(1.2),
+                Val::Undefined,
+                Val::Percent(7.5),
+                Val::Undefined,
+            ),
+            ..default()
+        },
+        ..default()
+    };
+
+    cmds.spawn((
+        txt,
+        Name::new("2X Damage Text"),
+        DamagePowerUpDurationDisplay,
+        Game,
+    ));
+}
+
+pub fn update_dmg_powerup_duration_display(
+    duration: Res<DamageBoostDuration>,
+    mut txt_q: Query<(&mut Text, &mut Style), With<DamagePowerUpDurationDisplay>>,
+) {
+    if let Ok((mut txt, mut style)) = txt_q.get_single_mut() {
+        if duration.0.percent() > 0.0 {
+            // un-hide txt
+            style.display = Display::Flex;
+
+            // update time
+            let time = duration.0.elapsed();
+            let time_left = duration.0.duration().saturating_sub(time).as_secs();
+            txt.sections[0].value = format!("X2 DAMAGE: {}", time_left);
+        } else {
+            // hide txt
+            style.display = Display::None;
+        }
+    }
+}
+
 pub fn tick_dmg_duration_timer(
     mut player_q: Query<&mut Damage, With<Player>>,
     time: Res<Time>,
-    mut duration_res: ResMut<DamageDuration>,
+    mut duration: ResMut<DamageBoostDuration>,
 ) {
-    duration_res.0.tick(time.delta());
+    duration.0.tick(time.delta());
 
-    if duration_res.0.finished() {
+    if duration.0.finished() {
         if let Ok(mut dmg) = player_q.get_single_mut() {
             dmg.value = dmg.max;
         }
 
-        duration_res.0.reset();
-        duration_res.0.pause();
+        duration.0.reset();
+        duration.0.pause();
     }
 }
 
@@ -200,7 +253,7 @@ pub fn despawn_powerup_display(
     }
 }
 
-fn create_txt(assets: &Res<AssetServer>, txt: String) -> TextBundle {
+fn powerup_txt(assets: &Res<AssetServer>, txt: String) -> TextBundle {
     TextBundle {
         text: Text::from_section(
             txt,

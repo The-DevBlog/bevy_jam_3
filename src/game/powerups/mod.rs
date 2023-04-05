@@ -20,7 +20,7 @@ pub struct PowerUpsPlugin;
 impl Plugin for PowerUpsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PowerUpSpawnTime>()
-            .init_resource::<DamageDuration>()
+            .init_resource::<DamageBoostDuration>()
             .add_systems(
                 (
                     spawn_powerups,
@@ -29,8 +29,10 @@ impl Plugin for PowerUpsPlugin {
                     collect_hp_powerup,
                     tick_dmg_duration_timer,
                     despawn_powerup_display,
+                    update_dmg_powerup_duration_display,
                 )
                     .in_set(OnUpdate(AppState::Game)),
-            );
+            )
+            .add_system(spawn_dmg_powerup_duration_display.in_schedule(OnEnter(AppState::Game)));
     }
 }

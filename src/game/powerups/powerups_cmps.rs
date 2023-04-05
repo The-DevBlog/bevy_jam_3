@@ -12,6 +12,9 @@ pub struct HpPowerUp;
 pub struct DamagePowerUp;
 
 #[derive(Component)]
+pub struct DamagePowerUpDurationDisplay;
+
+#[derive(Component)]
 pub struct PowerUpDisplay {
     pub duration: Timer,
 }
