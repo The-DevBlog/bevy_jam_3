@@ -10,9 +10,22 @@ use crate::game::{
 
 use super::{
     enemy_cmps::{AttackRate, Enemy},
-    enemy_res::EnemySpawnTimer,
-    ENEMY_HP, ENEMY_SIZE, ENEMY_SPEED,
+    enemy_res::{EnemyHp, EnemySpawnTimer, RaiseDifficultyTimer},
+    ENEMY_SIZE, ENEMY_SPEED,
 };
+
+pub fn increase_hp_over_time(
+    mut timer: ResMut<RaiseDifficultyTimer>,
+    mut enemy_hp: ResMut<EnemyHp>,
+    time: Res<Time>,
+) {
+    if timer.0.just_finished() {
+        enemy_hp.0 += 25.0;
+        println!("INCREASE ENEMY HP");
+    }
+
+    timer.0.tick(time.delta());
+}
 
 pub fn spawn_enemies(
     mut cmds: Commands,
@@ -20,6 +33,7 @@ pub fn spawn_enemies(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut spawn_timer: ResMut<EnemySpawnTimer>,
     time: Res<Time>,
+    enemy_hp: Res<EnemyHp>,
 ) {
     spawn_timer.0.tick(time.delta());
 
@@ -47,7 +61,7 @@ pub fn spawn_enemies(
             Damage::new(10.0),
             Enemy,
             Game,
-            Hp::new(ENEMY_HP),
+            Hp::new(enemy_hp.0),
             Name::new("Enemy"),
             RigidBody::Dynamic,
             Speed(ENEMY_SPEED),

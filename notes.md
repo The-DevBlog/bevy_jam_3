@@ -3,13 +3,15 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
-- Visual indicators for powerups
-  - Add timer display for x2 damage
 - Sounds effects
   - Take damage
-- Increase difficulty
-  - Shorten spawn rate after time
-  - Add health after time
+- adjust gameplay
+  - decrease powerup spawn rate
+  - increase enemy speed (to be faster than player walk)
+  - increase stamina amount
+  - decrease duration to stamina regen
+- Add music
+- Add color changes to beats
 - Texture/Models
   - Enemy
   - Player
