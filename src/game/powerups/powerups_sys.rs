@@ -11,7 +11,7 @@ use crate::game::{
 };
 
 use super::{
-    powerups_cmps::{DamagePowerUp, HpPowerUp, StaminaPowerUp},
+    powerups_cmps::{DamagePowerUp, HpPowerUp, PowerUpDisplay, StaminaPowerUp},
     powerups_res::{DamageDuration, PowerUpSpawnTime},
     DMG_BOOST, HP_BOOST,
 };
@@ -78,6 +78,7 @@ pub fn spawn_powerups(
 
 pub fn collect_stamina_powerup(
     mut cmds: Commands,
+    assets: Res<AssetServer>,
     mut player_q: Query<(&mut Stamina, &Transform), With<Player>>,
     powerup_q: Query<(Entity, &Transform), With<StaminaPowerUp>>,
 ) {
@@ -89,6 +90,15 @@ pub fn collect_stamina_powerup(
             if distance < PLAYER_SIZE {
                 stamina.value = stamina.max;
                 cmds.entity(powerup_ent).despawn_recursive();
+
+                // spawn txt
+                let txt = create_txt(&assets, "Full Stamina!".to_string());
+                cmds.spawn((
+                    txt,
+                    Name::new("Full Stamina Text"),
+                    PowerUpDisplay::default(),
+                    Game,
+                ));
             }
         }
     }
@@ -96,6 +106,7 @@ pub fn collect_stamina_powerup(
 
 pub fn collect_dmg_powerup(
     mut cmds: Commands,
+    assets: Res<AssetServer>,
     mut player_q: Query<(&Transform, &mut Damage), With<Player>>,
     powerup_q: Query<(Entity, &Transform), With<DamagePowerUp>>,
     mut duration_res: ResMut<DamageDuration>,
@@ -111,6 +122,15 @@ pub fn collect_dmg_powerup(
                 cmds.entity(powerup_ent).despawn_recursive();
 
                 dmg.value = dmg.max + DMG_BOOST;
+
+                // spawn txt
+                let txt = create_txt(&assets, "x2 Damage!".to_string());
+                cmds.spawn((
+                    txt,
+                    Name::new("x2 Damage Text"),
+                    PowerUpDisplay::default(),
+                    Game,
+                ));
             }
         }
     }
@@ -118,6 +138,7 @@ pub fn collect_dmg_powerup(
 
 pub fn collect_hp_powerup(
     mut cmds: Commands,
+    assets: Res<AssetServer>,
     mut player_q: Query<(&Transform, &mut Hp), With<Player>>,
     powerup_q: Query<(Entity, &Transform), With<HpPowerUp>>,
 ) {
@@ -134,6 +155,15 @@ pub fn collect_hp_powerup(
                 }
 
                 cmds.entity(powerup_ent).despawn_recursive();
+
+                // spawn txt
+                let txt = create_txt(&assets, format!("+{} health!", HP_BOOST));
+                cmds.spawn((
+                    txt,
+                    Name::new("HP PowerUp Text"),
+                    PowerUpDisplay::default(),
+                    Game,
+                ));
             }
         }
     }
@@ -153,5 +183,38 @@ pub fn tick_dmg_duration_timer(
 
         duration_res.0.reset();
         duration_res.0.pause();
+    }
+}
+
+pub fn despawn_powerup_display(
+    mut cmds: Commands,
+    time: Res<Time>,
+    mut display_q: Query<(Entity, &mut PowerUpDisplay), With<PowerUpDisplay>>,
+) {
+    for (ent, mut display) in display_q.iter_mut() {
+        display.duration.tick(time.delta());
+
+        if display.duration.finished() {
+            cmds.entity(ent).despawn_recursive();
+        }
+    }
+}
+
+fn create_txt(assets: &Res<AssetServer>, txt: String) -> TextBundle {
+    TextBundle {
+        text: Text::from_section(
+            txt,
+            TextStyle {
+                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font_size: 25.0,
+                color: Color::WHITE.into(),
+            },
+        ),
+        style: Style {
+            align_self: AlignSelf::Center,
+            position: UiRect::left(Val::Percent(55.0)),
+            ..default()
+        },
+        ..default()
     }
 }

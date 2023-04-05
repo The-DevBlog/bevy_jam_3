@@ -9,10 +9,11 @@ use powerups_sys::*;
 
 use crate::AppState;
 
-pub const POWERUP_SPAWN_TIME: f32 = 2.0;
+pub const POWERUP_SPAWN_TIME: f32 = 3.5;
 pub const DMG_BOOST_DURATION: u64 = 10;
 pub const DMG_BOOST: f32 = 25.0;
 pub const HP_BOOST: f32 = 20.0;
+pub const POWERUP_DISPLAY_DURATION: f32 = 2.0;
 
 pub struct PowerUpsPlugin;
 
@@ -27,6 +28,7 @@ impl Plugin for PowerUpsPlugin {
                     collect_dmg_powerup,
                     collect_hp_powerup,
                     tick_dmg_duration_timer,
+                    despawn_powerup_display,
                 )
                     .in_set(OnUpdate(AppState::Game)),
             );

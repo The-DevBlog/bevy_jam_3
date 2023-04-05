@@ -3,9 +3,9 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
+- Visual indicators for powerups
+  - Add timer display for x2 damage
 - Sounds effects
-  - Shoot
-  - Enemy hit
   - Take damage
 - Increase difficulty
   - Shorten spawn rate after time

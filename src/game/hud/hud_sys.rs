@@ -7,42 +7,14 @@ use crate::game::{
     player::player_cmps::*,
 };
 
-fn new_txt(assets: &Res<AssetServer>) -> TextBundle {
-    TextBundle::from_section(
-        "",
-        TextStyle {
-            color: Color::WHITE,
-            font: assets.load("fonts/FiraSans-Bold.ttf"),
-            font_size: 25.0,
-        },
-    )
-}
-
-fn new_container(color: Color, position: UiRect, size: Size) -> NodeBundle {
-    NodeBundle {
-        background_color: color.into(),
-        style: Style {
-            align_self: AlignSelf::FlexStart,
-            align_items: AlignItems::Center,
-            justify_content: JustifyContent::Center,
-            padding: UiRect::all(Val::Px(20.0)),
-            position,
-            position_type: PositionType::Absolute,
-            size,
-            ..default()
-        },
-        ..default()
-    }
-}
-
 pub fn spawn_health_bar(mut cmds: Commands, assets: Res<AssetServer>) {
-    let container = new_container(
+    let container = create_container(
         Color::BLACK,
         UiRect::left(Val::Percent(1.0)),
         Size::new(Val::Px(127.5), Val::Px(42.5)),
     );
 
-    let fill = new_container(
+    let fill = create_container(
         Color::RED,
         UiRect::new(
             Val::Percent(1.0),
@@ -53,7 +25,7 @@ pub fn spawn_health_bar(mut cmds: Commands, assets: Res<AssetServer>) {
         Size::new(Val::Px(125.0), Val::Px(40.0)),
     );
 
-    let txt = new_txt(&assets);
+    let txt = create_txt(&assets);
 
     cmds.spawn((container, HealthBarContainer, Name::new("Health Bar"), Game))
         .with_children(|parent| {
@@ -63,13 +35,13 @@ pub fn spawn_health_bar(mut cmds: Commands, assets: Res<AssetServer>) {
 }
 
 pub fn spawn_stamina_bar(mut cmds: Commands, assets: Res<AssetServer>) {
-    let container = new_container(
+    let container = create_container(
         Color::BLACK,
         UiRect::right(Val::Percent(0.5)),
         Size::new(Val::Px(127.5), Val::Px(42.5)),
     );
 
-    let fill = new_container(
+    let fill = create_container(
         Color::DARK_GREEN,
         UiRect::new(
             Val::Undefined,
@@ -80,7 +52,7 @@ pub fn spawn_stamina_bar(mut cmds: Commands, assets: Res<AssetServer>) {
         Size::new(Val::Px(125.0), Val::Px(40.0)),
     );
 
-    let txt = new_txt(&assets);
+    let txt = create_txt(&assets);
 
     cmds.spawn((
         container,
@@ -167,4 +139,32 @@ pub fn update_game_time_display(
 /// reset the game time to zero whenever game starts
 pub fn reset_game_time(mut game_time: ResMut<GameTime>) {
     game_time.0.reset();
+}
+
+fn create_txt(assets: &Res<AssetServer>) -> TextBundle {
+    TextBundle::from_section(
+        "",
+        TextStyle {
+            color: Color::WHITE,
+            font: assets.load("fonts/FiraSans-Bold.ttf"),
+            font_size: 25.0,
+        },
+    )
+}
+
+fn create_container(color: Color, position: UiRect, size: Size) -> NodeBundle {
+    NodeBundle {
+        background_color: color.into(),
+        style: Style {
+            align_self: AlignSelf::FlexStart,
+            align_items: AlignItems::Center,
+            justify_content: JustifyContent::Center,
+            padding: UiRect::all(Val::Px(20.0)),
+            position,
+            position_type: PositionType::Absolute,
+            size,
+            ..default()
+        },
+        ..default()
+    }
 }
