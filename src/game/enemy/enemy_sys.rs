@@ -21,7 +21,6 @@ pub fn increase_hp_over_time(
 ) {
     if timer.0.just_finished() {
         enemy_hp.0 += 25.0;
-        println!("INCREASE ENEMY HP");
     }
 
     timer.0.tick(time.delta());
@@ -85,9 +84,11 @@ pub fn enemy_tracking(
 }
 
 pub fn enemy_attack(
+    time: Res<Time>,
+    assets: Res<AssetServer>,
+    audio: Res<Audio>,
     mut enemy_q: Query<(&mut Transform, &mut AttackRate, &Damage), With<Enemy>>,
     mut player: Query<(&Transform, &mut Hp), (With<Player>, Without<Enemy>)>,
-    time: Res<Time>,
 ) {
     for (enemy_trans, mut attack_rate, enemy_dmg) in enemy_q.iter_mut() {
         if let Ok((player_trans, mut player_hp)) = player.get_single_mut() {
@@ -96,6 +97,8 @@ pub fn enemy_attack(
             if distance < 0.8 {
                 if attack_rate.0.finished() || attack_rate.0.percent_left() == 1.0 {
                     player_hp.value -= enemy_dmg.value;
+                    let sound = assets.load(r"audio\hurt.ogg");
+                    audio.play(sound);
                 }
                 attack_rate.0.tick(time.delta());
             } else {

@@ -27,6 +27,6 @@ impl Default for Colors {
         colors.push(Color::AZURE);
         colors.push(Color::VIOLET);
 
-        return game::world::world_res::Colors(colors);
+        game::world::world_res::Colors(colors)
     }
 }

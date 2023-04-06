@@ -1,16 +1,18 @@
 use bevy::prelude::*;
 
+pub mod music_res;
+mod music_sys;
+
+use music_res::*;
+use music_sys::*;
+
 use crate::AppState;
 
 pub struct MusicPlugin;
 
 impl Plugin for MusicPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(play_music.in_schedule(OnEnter(AppState::Game)));
+        app.init_resource::<MusicController>()
+            .add_system(setup_music.in_schedule(OnEnter(AppState::Game)));
     }
-}
-
-pub fn play_music(assets: Res<AssetServer>, audio: Res<Audio>) {
-    let music = assets.load(r"audio\music\tvs_story.ogg");
-    audio.play(music);
 }
