@@ -8,7 +8,7 @@ use crate::AppState;
 use enemy_res::*;
 use enemy_sys::*;
 
-pub const ENEMY_SPAWN_TIME: f32 = 0.001;
+pub const ENEMY_SPAWN_TIME: f32 = 0.2;
 pub const ENEMY_SPEED: f32 = 2.6; // slightly faster than player
 pub const ENEMY_HP: f32 = 100.0;
 pub const ENEMY_SIZE: f32 = 0.5;
