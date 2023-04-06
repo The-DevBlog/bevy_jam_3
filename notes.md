@@ -3,7 +3,6 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
-- reset enemy health when playing again
 - Texture/Models
   - Enemy
   - Player

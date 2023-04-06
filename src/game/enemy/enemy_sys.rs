@@ -11,7 +11,7 @@ use crate::game::{
 use super::{
     enemy_cmps::{AttackRate, Enemy},
     enemy_res::{EnemyHp, EnemySpawnTimer, RaiseDifficultyTimer},
-    ENEMY_SIZE, ENEMY_SPEED,
+    ENEMY_HP, ENEMY_SIZE, ENEMY_SPEED,
 };
 
 pub fn increase_hp_over_time(
@@ -106,4 +106,8 @@ pub fn enemy_attack(
             }
         }
     }
+}
+
+pub fn reset_health(mut enemy_hp: ResMut<EnemyHp>) {
+    enemy_hp.0 = ENEMY_HP;
 }

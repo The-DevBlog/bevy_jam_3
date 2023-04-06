@@ -6,7 +6,7 @@ use crate::{
         camera::camera_cmps::CustomCamera,
         enemy::enemy_cmps::Enemy,
         game_cmps::{Damage, Game, Hp},
-        player::player_cmps::Player,
+        player::{player_cmps::Player, player_res::KillCount},
         world::MAP_SIZE,
     },
     gamepad::gamepad_rcs::MyGamepad,
@@ -88,6 +88,9 @@ pub fn move_projectile(
     }
 }
 
+/// Detect projectile-enemy collision
+/// Despawn enemy if hp is <= 0
+/// Increase kill count
 pub fn hit_enemy(
     mut cmds: Commands,
     audio: Res<Audio>,
@@ -95,6 +98,7 @@ pub fn hit_enemy(
     player_q: Query<&Damage, (With<Player>, Without<Enemy>)>,
     mut enemy_q: Query<(Entity, &Transform, &mut Hp), With<Enemy>>,
     projectile_q: Query<(Entity, &Transform), With<Projectile>>,
+    mut kills: ResMut<KillCount>,
 ) {
     for (enemy_ent, enemy_trans, mut enemy_hp) in enemy_q.iter_mut() {
         for (projectile_ent, projectile_trans) in projectile_q.iter() {
@@ -106,19 +110,23 @@ pub fn hit_enemy(
 
             // reduce enemy hp and despawn projectile
             if distance < 0.25 {
-                // enemy_hp.0 -= projectile_dmg.damage;
+                // despawn enemy
+                if enemy_hp.value <= 0.0 {
+                    cmds.entity(enemy_ent).despawn_recursive();
+
+                    // increase kill count
+                    kills.0 += 1;
+                }
+
+                // decrease enemy hp and despawn projectile
                 enemy_hp.value -= dmg.value;
                 cmds.entity(projectile_ent).despawn_recursive();
 
+                // play enemy hit noise
                 let num = rand::thread_rng().gen_range(0..=4);
                 let file = format!(r"audio\enemy\hurt_{}.ogg", num);
                 let sound = assets.load(file);
                 audio.play(sound);
-            }
-
-            // despawn enemy
-            if enemy_hp.value <= 0.0 {
-                cmds.entity(enemy_ent).despawn_recursive();
             }
         }
     }

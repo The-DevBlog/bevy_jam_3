@@ -183,10 +183,11 @@ pub fn spawn_dmg_powerup_duration_display(mut cmds: Commands, assets: Res<AssetS
         ),
         style: Style {
             display: Display::None,
+            position_type: PositionType::Absolute,
             position: UiRect::new(
                 Val::Percent(1.2),
                 Val::Undefined,
-                Val::Percent(7.5),
+                Val::Percent(13.0),
                 Val::Undefined,
             ),
             ..default()
@@ -214,7 +215,7 @@ pub fn update_dmg_powerup_duration_display(
             // update time
             let time = duration.0.elapsed();
             let time_left = duration.0.duration().saturating_sub(time).as_secs();
-            txt.sections[0].value = format!("X2 DAMAGE: {}", time_left);
+            txt.sections[0].value = format!("X2 Damage: {}", time_left);
         } else {
             // hide txt
             style.display = Display::None;

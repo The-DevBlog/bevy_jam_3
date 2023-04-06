@@ -1,11 +1,12 @@
 use bevy::prelude::*;
 
 pub mod player_cmps;
+pub mod player_res;
 pub mod player_sys;
 
-use player_sys::*;
-
 use crate::AppState;
+use player_res::*;
+use player_sys::*;
 
 pub const PLAYER_SPEED: f32 = 2.5;
 pub const PLAYER_HP: f32 = 100.0;
@@ -18,7 +19,8 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_player.in_schedule(OnEnter(AppState::Game)))
+        app.init_resource::<KillCount>()
+            .add_systems((spawn_player, reset_killcount).in_schedule(OnEnter(AppState::Game)))
             .add_systems(
                 (
                     move_player_keyboard,

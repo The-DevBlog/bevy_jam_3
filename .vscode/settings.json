@@ -6,6 +6,7 @@
         "despawn",
         "gamepad",
         "healthbar",
+        "killcount",
         "POWERUP",
         "powerups",
         "regen"

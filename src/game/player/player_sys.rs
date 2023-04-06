@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 
+use super::player_res::KillCount;
 use super::{player_cmps::*, PLAYER_HP, PLAYER_SIZE, PLAYER_SPEED, SPRINT_SPEED, STAMINA};
 use crate::game::camera::camera_cmps::CustomCamera;
 use crate::game::game_cmps::{Damage, Game, Hp, Speed};
@@ -198,4 +199,8 @@ pub fn player_is_dead(player_q: Query<&Hp, With<Player>>) -> bool {
     } else {
         false
     }
+}
+
+pub fn reset_killcount(mut kills: ResMut<KillCount>) {
+    kills.0 = 0;
 }

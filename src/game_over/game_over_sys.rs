@@ -1,11 +1,17 @@
 use bevy::prelude::*;
 
+use crate::game::player::player_res::KillCount;
 use crate::{game::game_res::GameTime, gamepad::gamepad_rcs::MyGamepad, AppState};
 
 use super::game_over_cmps::*;
 use super::*;
 
-pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>, game_time: Res<GameTime>) {
+pub fn spawn_menu(
+    mut cmds: Commands,
+    assets: Res<AssetServer>,
+    game_time: Res<GameTime>,
+    kills: Res<KillCount>,
+) {
     cmds.spawn((Camera3dBundle::default(), GameOverMenu));
 
     let container = (
@@ -23,6 +29,19 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>, game_time: Res<G
         },
         GameOverMenu,
         Name::new("Game Over Menu"),
+    );
+
+    let killcount_txt = (
+        TextBundle::from_section(
+            format!("Kills: {}", kills.0),
+            TextStyle {
+                color: Color::WHITE,
+                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font_size: 40.0,
+                ..default()
+            },
+        ),
+        Name::new("Kill Count Text"),
     );
 
     let time = game_time.0.elapsed().as_secs_f32();
@@ -72,6 +91,9 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>, game_time: Res<G
     cmds.spawn(container).with_children(|parent| {
         // time survived txt
         parent.spawn(time_survived_txt);
+
+        // kill count txt
+        parent.spawn(killcount_txt);
 
         // play again btn
         parent.spawn(play_again_btn).with_children(|parent| {

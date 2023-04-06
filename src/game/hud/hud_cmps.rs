@@ -17,3 +17,6 @@ pub struct GameTimeDisplay;
 
 #[derive(Component)]
 pub struct GameTimeDisplayTxt;
+
+#[derive(Component)]
+pub struct KillCountTxt;

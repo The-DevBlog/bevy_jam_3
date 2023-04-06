@@ -4,8 +4,40 @@ use super::hud_cmps::*;
 use crate::game::{
     game_cmps::{Game, Hp},
     game_res::GameTime,
-    player::player_cmps::*,
+    player::{player_cmps::*, player_res::KillCount},
 };
+
+pub fn spawn_kill_count(mut cmds: Commands, assets: Res<AssetServer>) {
+    let txt = TextBundle {
+        text: Text::from_section(
+            "",
+            TextStyle {
+                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font_size: 25.0,
+                color: Color::WHITE.into(),
+            },
+        ),
+        style: Style {
+            position_type: PositionType::Absolute,
+            position: UiRect::new(
+                Val::Percent(1.2),
+                Val::Undefined,
+                Val::Percent(7.5),
+                Val::Undefined,
+            ),
+            ..default()
+        },
+        ..default()
+    };
+
+    cmds.spawn((txt, KillCountTxt, Game));
+}
+
+pub fn update_kill_count(kills: Res<KillCount>, mut txt_q: Query<&mut Text, With<KillCountTxt>>) {
+    if let Ok(mut txt) = txt_q.get_single_mut() {
+        txt.sections[0].value = format!("Kills: {}", kills.0);
+    }
+}
 
 pub fn spawn_health_bar(mut cmds: Commands, assets: Res<AssetServer>) {
     let container = create_container(

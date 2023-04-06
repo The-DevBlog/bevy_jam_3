@@ -17,6 +17,7 @@ impl Plugin for HudPlugin {
                 spawn_stamina_bar,
                 spawn_time_display,
                 reset_game_time,
+                spawn_kill_count,
             )
                 .in_schedule(OnEnter(AppState::Game)),
         )
@@ -25,6 +26,7 @@ impl Plugin for HudPlugin {
                 update_stamina_bar,
                 update_health_bar,
                 update_game_time_display,
+                update_kill_count,
             )
                 .in_set(OnUpdate(AppState::Game)),
         );
