@@ -9,8 +9,8 @@ use powerups_sys::*;
 
 use crate::AppState;
 
-pub const POWERUP_SPAWN_TIME: f32 = 3.5;
-pub const DMG_BOOST_DURATION: u64 = 10;
+pub const POWERUP_SPAWN_TIME: f32 = 8.0;
+pub const DMG_BOOST_DURATION: u64 = 15;
 pub const DMG_BOOST: f32 = 25.0;
 pub const HP_BOOST: f32 = 20.0;
 pub const POWERUP_DISPLAY_DURATION: f32 = 2.0;

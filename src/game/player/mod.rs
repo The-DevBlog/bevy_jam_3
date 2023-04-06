@@ -9,9 +9,10 @@ use crate::AppState;
 
 pub const PLAYER_SPEED: f32 = 2.5;
 pub const PLAYER_HP: f32 = 100.0;
-pub const PLAYER_STAMINA: f32 = 50.0;
+pub const STAMINA: f32 = 100.0;
 pub const SPRINT_SPEED: f32 = 2.0;
 pub const PLAYER_SIZE: f32 = 0.5;
+pub const STAMINA_REGEN_TIME: f32 = 1.5;
 
 pub struct PlayerPlugin;
 

@@ -3,12 +3,7 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
-- loop music
-- adjust gameplay
-  - decrease powerup spawn rate
-  - increase enemy speed (to be faster than player walk)
-  - increase stamina amount
-  - decrease duration to stamina regen
+- reset enemy health when playing again
 - Texture/Models
   - Enemy
   - Player
@@ -17,3 +12,4 @@
   - expand map
   - add walls/boundaries
   - add obstacles 
+- Display kill count on game over screen

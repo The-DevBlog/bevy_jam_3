@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 
-use super::{player_cmps::*, PLAYER_HP, PLAYER_SIZE, PLAYER_SPEED, PLAYER_STAMINA, SPRINT_SPEED};
+use super::{player_cmps::*, PLAYER_HP, PLAYER_SIZE, PLAYER_SPEED, SPRINT_SPEED, STAMINA};
 use crate::game::camera::camera_cmps::CustomCamera;
 use crate::game::game_cmps::{Damage, Game, Hp, Speed};
 use crate::gamepad::gamepad_rcs::MyGamepad;
@@ -28,7 +28,7 @@ pub fn spawn_player(
             Player,
             RigidBody::Fixed,
             Speed(PLAYER_SPEED),
-            Stamina::new(PLAYER_STAMINA),
+            Stamina::new(STAMINA),
         ))
         .id();
 

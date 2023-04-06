@@ -2,6 +2,8 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
+use super::STAMINA_REGEN_TIME;
+
 #[derive(Component)]
 pub struct Player;
 
@@ -17,7 +19,7 @@ impl Stamina {
         Self {
             max,
             value: max,
-            regen_time: Timer::new(Duration::from_secs(2), TimerMode::Once),
+            regen_time: Timer::new(Duration::from_secs_f32(STAMINA_REGEN_TIME), TimerMode::Once),
         }
     }
 }
