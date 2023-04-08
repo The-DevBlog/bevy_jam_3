@@ -1,12 +1,13 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::render_resource::Face};
 use bevy_rapier3d::prelude::*;
 use rand::Rng;
+use std::f32::consts::PI;
 
 use crate::game::game_cmps::Game;
 
 use super::{
     world_res::{Colors, LightTimer},
-    MAP_SIZE,
+    MAP_SIZE, WALL_HEIGHT,
 };
 
 pub fn spawn_ground(
@@ -35,6 +36,45 @@ pub fn spawn_ground(
         Collider::cuboid(MAP_SIZE / 2.0, 0.0, MAP_SIZE / 2.0),
         Name::new("Ground"),
     ));
+}
+
+pub fn spawn_walls(
+    mut cmds: Commands,
+    // assets: Res<AssetServer>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    let mut wall = |x_pos: f32, z_pos: f32, y_rotation: f32, face: Face, name: &str| {
+        (
+            PbrBundle {
+                mesh: meshes.add(Mesh::from(shape::Quad {
+                    size: Vec2::new(MAP_SIZE, WALL_HEIGHT),
+                    ..default()
+                })),
+                material: materials
+                    .add(StandardMaterial {
+                        base_color: Color::CRIMSON.into(),
+                        cull_mode: Some(face),
+                        ..default()
+                    })
+                    .clone(),
+                transform: Transform {
+                    translation: Vec3::new(x_pos / 2.0, WALL_HEIGHT / 2.0, z_pos / 2.0),
+                    rotation: Quat::from_rotation_y(y_rotation),
+                    ..default()
+                },
+                ..default()
+            },
+            Collider::cuboid(MAP_SIZE / 2.0, WALL_HEIGHT / 2.0, 0.0),
+            Game,
+            Name::new(name.to_string()),
+        )
+    };
+
+    cmds.spawn(wall(0.0, MAP_SIZE, 0.0, Face::Front, "North Wall"));
+    cmds.spawn(wall(0.0, -MAP_SIZE, 0.0, Face::Back, "South Wall"));
+    cmds.spawn(wall(MAP_SIZE, 0.0, PI / 2.0, Face::Front, "East Wall"));
+    cmds.spawn(wall(-MAP_SIZE, 0.0, PI / 2.0, Face::Back, "West Wall"));
 }
 
 pub fn spawn_light(mut cmds: Commands) {
