@@ -11,16 +11,23 @@ use super::{
 
 pub fn spawn_ground(
     mut cmds: Commands,
+    assets: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
+    // let _textures = assets.load_folder("textures").unwrap();
+    // let floor = assets.get_handle("textures/checkers03_s.jpg");
+
+    let floor = assets.load("textures/checkers03_s.png");
+
     cmds.spawn((
         PbrBundle {
             mesh: meshes.add(Mesh::from(shape::Plane {
                 size: MAP_SIZE,
                 ..default()
             })),
-            material: materials.add(Color::GRAY.into()),
+            // material: materials.add(Color::GRAY.into()),
+            material: floor.clone(),
             ..default()
         },
         Game,
