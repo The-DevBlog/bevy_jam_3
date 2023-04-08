@@ -32,7 +32,7 @@ pub fn spawn_ground(
             ..default()
         },
         Game,
-        Collider::cuboid(MAP_SIZE, 0.0, MAP_SIZE),
+        Collider::cuboid(MAP_SIZE / 2.0, 0.0, MAP_SIZE / 2.0),
         Name::new("Ground"),
     ));
 }

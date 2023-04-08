@@ -45,7 +45,6 @@ pub fn shoot_projectile(
             if fire_rate.0.finished() || fire_rate.0.percent_left() == 1.0 {
                 let projectile = (
                     PbrBundle {
-                        // material: materials.add(Color::YELLOW.into()),
                         material: materials.add(StandardMaterial {
                             emissive: Color::ORANGE_RED.into(),
                             ..default()
