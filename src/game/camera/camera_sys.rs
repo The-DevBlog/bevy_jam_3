@@ -137,11 +137,3 @@ pub fn zoom_gamepad(
         }
     }
 }
-
-// centers the cursor in the center of the screen
-pub fn _lock_cursor(mut window_q: Query<&mut Window, With<PrimaryWindow>>) {
-    let mut window = window_q.get_single_mut().unwrap();
-    let x = window.width() / 2.0;
-    let y = window.height() / 2.0;
-    window.set_cursor_position(Some(Vec2::new(x, y)));
-}
