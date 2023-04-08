@@ -3,14 +3,14 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
+- Bound player mouse to screen (makes mouse users impossible)
+- Better map
+  - add walls/boundaries
+  - add obstacles 
 - Texture/Models
   - Enemy
   - Player
   - World
-- Better map
-  - expand map
-  - add walls/boundaries
-  - add obstacles 
 - Write readme
   - Credits
     - Music
