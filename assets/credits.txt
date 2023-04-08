@@ -1,0 +1,5 @@
+textures: 
+- Calinou - https://opengameart.org/content/seamless-textures-0
+    - checkers03_s.jpg
+    - circles01_s_z.jpg
+    - marble07_z.jpg
