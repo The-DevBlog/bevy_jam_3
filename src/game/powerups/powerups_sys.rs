@@ -34,7 +34,10 @@ pub fn spawn_powerups(
 
     let mut powerup = |color: Color| -> PbrBundle {
         PbrBundle {
-            material: materials.add(color.into()),
+            material: materials.add(StandardMaterial {
+                emissive: color.into(),
+                ..default()
+            }),
             mesh: meshes.add(Mesh::from(shape::Cylinder {
                 height: 0.2,
                 radius: 0.1,

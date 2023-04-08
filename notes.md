@@ -3,10 +3,6 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
-- Write readme
-  - Credits
-    - Music
-    - Sound effects
 - Texture/Models
   - Enemy
   - Player
@@ -15,6 +11,10 @@
   - expand map
   - add walls/boundaries
   - add obstacles 
+- Write readme
+  - Credits
+    - Music
+    - Sound effects
 
 # Out of Jam Scopes
 - Shaders
@@ -39,3 +39,4 @@
 - Adjust zoom controls
   - zoom in: Dpad up
   - zoom out: Dpad down
+- Add red fill to player when hit by enemy
