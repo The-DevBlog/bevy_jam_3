@@ -15,10 +15,12 @@ pub fn spawn_ground(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    // let _textures = assets.load_folder("textures").unwrap();
-    // let floor = assets.get_handle("textures/checkers03_s.jpg");
+    let floor_txtr = assets.load("textures/checkers03_s.png");
 
-    let floor = assets.load("textures/checkers03_s.png");
+    let material_handle = materials.add(StandardMaterial {
+        base_color_texture: Some(floor_txtr.clone()),
+        ..default()
+    });
 
     cmds.spawn((
         PbrBundle {
@@ -26,12 +28,11 @@ pub fn spawn_ground(
                 size: MAP_SIZE,
                 ..default()
             })),
-            // material: materials.add(Color::GRAY.into()),
-            material: floor.clone(),
+            material: material_handle,
             ..default()
         },
         Game,
-        Collider::cuboid(MAP_SIZE / 2.0, 0.0, MAP_SIZE / 2.0),
+        Collider::cuboid(MAP_SIZE, 0.0, MAP_SIZE),
         Name::new("Ground"),
     ));
 }
