@@ -27,6 +27,7 @@ impl Plugin for PlayerPlugin {
                     move_player_gamepad,
                     update_stamina,
                     update_health,
+                    player_map_bounds,
                 )
                     .in_set(OnUpdate(AppState::Game)),
             );

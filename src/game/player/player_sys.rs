@@ -5,6 +5,7 @@ use super::player_res::KillCount;
 use super::{player_cmps::*, PLAYER_HP, PLAYER_SIZE, PLAYER_SPEED, SPRINT_SPEED, STAMINA};
 use crate::game::camera::camera_cmps::CustomCamera;
 use crate::game::game_cmps::{Damage, Game, Hp, Speed};
+use crate::game::world::MAP_SIZE;
 use crate::gamepad::gamepad_rcs::MyGamepad;
 
 pub fn spawn_player(
@@ -51,6 +52,31 @@ pub fn spawn_player(
 
     // make camera have same transform as player
     cmds.entity(player).push_children(&[camera]);
+}
+
+/// keeps player within the map bounds
+pub fn player_map_bounds(mut player_q: Query<&mut Transform, With<Player>>) {
+    if let Ok(mut trans) = player_q.get_single_mut() {
+        // +Z bounds
+        if trans.translation.z + PLAYER_SIZE / 2.0 > MAP_SIZE / 2.0 {
+            trans.translation.z = MAP_SIZE / 2.0 - PLAYER_SIZE / 2.0;
+        }
+
+        // -Z bounds
+        if trans.translation.z - PLAYER_SIZE / 2.0 < -MAP_SIZE / 2.0 {
+            trans.translation.z = -MAP_SIZE / 2.0 + PLAYER_SIZE / 2.0;
+        }
+
+        // +X bounds
+        if trans.translation.x + PLAYER_SIZE / 2.0 > MAP_SIZE / 2.0 {
+            trans.translation.x = MAP_SIZE / 2.0 - PLAYER_SIZE / 2.0;
+        }
+
+        // -X bounds
+        if trans.translation.x - PLAYER_SIZE / 2.0 < -MAP_SIZE / 2.0 {
+            trans.translation.x = -MAP_SIZE / 2.0 + PLAYER_SIZE / 2.0;
+        }
+    }
 }
 
 pub fn move_player_keyboard(

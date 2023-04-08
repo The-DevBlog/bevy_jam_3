@@ -40,100 +40,41 @@ pub fn spawn_ground(
 
 pub fn spawn_walls(
     mut cmds: Commands,
-    assets: Res<AssetServer>,
+    // assets: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let north_wall = (
-        PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Quad {
-                size: Vec2::new(MAP_SIZE, WALL_HEIGHT),
-                ..default()
-            })),
-            material: materials.add(Color::CRIMSON.into()),
-            transform: Transform {
-                translation: Vec3::new(0.0, WALL_HEIGHT / 2.0, -MAP_SIZE / 2.0),
-                ..default()
-            },
-            ..default()
-        },
-        Collider::cuboid(MAP_SIZE / 2.0, WALL_HEIGHT / 2.0, 0.0),
-        Game,
-        Name::new("North Wall"),
-    );
-
-    let south_wall = (
-        PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Quad {
-                size: Vec2::new(MAP_SIZE, WALL_HEIGHT),
-                ..default()
-            })),
-            material: materials.add(StandardMaterial {
-                base_color: Color::CRIMSON.into(),
-                cull_mode: Some(Face::Front),
-                ..default()
-            }),
-            transform: Transform {
-                translation: Vec3::new(0.0, WALL_HEIGHT / 2.0, MAP_SIZE / 2.0),
+    let mut wall = |x_pos: f32, z_pos: f32, y_rotation: f32, face: Face, name: &str| {
+        (
+            PbrBundle {
+                mesh: meshes.add(Mesh::from(shape::Quad {
+                    size: Vec2::new(MAP_SIZE, WALL_HEIGHT),
+                    ..default()
+                })),
+                material: materials
+                    .add(StandardMaterial {
+                        base_color: Color::CRIMSON.into(),
+                        cull_mode: Some(face),
+                        ..default()
+                    })
+                    .clone(),
+                transform: Transform {
+                    translation: Vec3::new(x_pos / 2.0, WALL_HEIGHT / 2.0, z_pos / 2.0),
+                    rotation: Quat::from_rotation_y(y_rotation),
+                    ..default()
+                },
                 ..default()
             },
-            ..default()
-        },
-        Collider::cuboid(MAP_SIZE / 2.0, WALL_HEIGHT / 2.0, 0.0),
-        Game,
-        Name::new("South Wall"),
-    );
+            Collider::cuboid(MAP_SIZE / 2.0, WALL_HEIGHT / 2.0, 0.0),
+            Game,
+            Name::new(name.to_string()),
+        )
+    };
 
-    let east_wall = (
-        PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Quad {
-                size: Vec2::new(MAP_SIZE, WALL_HEIGHT),
-                ..default()
-            })),
-            material: materials.add(StandardMaterial {
-                base_color: Color::CRIMSON.into(),
-                cull_mode: Some(Face::Front),
-                ..default()
-            }),
-            transform: Transform {
-                translation: Vec3::new(MAP_SIZE / 2.0, WALL_HEIGHT / 2.0, 0.0),
-                rotation: Quat::from_rotation_y(PI / 2.0),
-                ..default()
-            },
-            ..default()
-        },
-        Collider::cuboid(MAP_SIZE / 2.0, WALL_HEIGHT / 2.0, 0.0),
-        Game,
-        Name::new("East Wall"),
-    );
-
-    let west_wall = (
-        PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Quad {
-                size: Vec2::new(MAP_SIZE, WALL_HEIGHT),
-                ..default()
-            })),
-            material: materials.add(StandardMaterial {
-                base_color: Color::CRIMSON.into(),
-                cull_mode: Some(Face::Back),
-                ..default()
-            }),
-            transform: Transform {
-                translation: Vec3::new(-MAP_SIZE / 2.0, WALL_HEIGHT / 2.0, 0.0),
-                rotation: Quat::from_rotation_y(PI / 2.0),
-                ..default()
-            },
-            ..default()
-        },
-        Collider::cuboid(MAP_SIZE / 2.0, 1.0, 0.0),
-        Game,
-        Name::new("West Wall"),
-    );
-
-    cmds.spawn(north_wall);
-    cmds.spawn(south_wall);
-    cmds.spawn(east_wall);
-    cmds.spawn(west_wall);
+    cmds.spawn(wall(0.0, MAP_SIZE, 0.0, Face::Front, "North Wall"));
+    cmds.spawn(wall(0.0, -MAP_SIZE, 0.0, Face::Back, "South Wall"));
+    cmds.spawn(wall(MAP_SIZE, 0.0, PI / 2.0, Face::Front, "East Wall"));
+    cmds.spawn(wall(-MAP_SIZE, 0.0, PI / 2.0, Face::Back, "West Wall"));
 }
 
 pub fn spawn_light(mut cmds: Commands) {
