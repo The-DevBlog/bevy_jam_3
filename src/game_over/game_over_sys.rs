@@ -73,7 +73,7 @@ pub fn spawn_menu(
 
     let play_again_txt = (
         TextBundle::from_section(
-            "Play Again - Y",
+            "Play Again - ",
             TextStyle {
                 color: Color::WHITE,
                 font: assets.load("fonts/PermanentMarker-Regular.ttf"),
@@ -82,6 +82,18 @@ pub fn spawn_menu(
             },
         ),
         Name::new("Play Again Text"),
+    );
+
+    let play_again_img = (
+        ImageBundle {
+            image: assets.load("imgs/y_button.png").into(),
+            style: Style {
+                size: Size::all(Val::Px(35.0)),
+                ..default()
+            },
+            ..default()
+        },
+        Name::new("Play Again Button Image"),
     );
 
     cmds.spawn((Camera3dBundle::default(), GameOverMenu));
@@ -96,8 +108,9 @@ pub fn spawn_menu(
 
         // play again btn
         parent.spawn(play_again_btn).with_children(|parent| {
-            // play again txt
+            // play again txt and btn img
             parent.spawn(play_again_txt);
+            parent.spawn(play_again_img);
         });
     });
 }

@@ -41,7 +41,7 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
 
     let play_txt = (
         TextBundle::from_section(
-            "Play - A",
+            "Play - ",
             TextStyle {
                 color: Color::WHITE,
                 font: assets.load("fonts/PermanentMarker-Regular.ttf"),
@@ -52,6 +52,18 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
         Name::new("Play Text"),
     );
 
+    let play_btn_img = (
+        ImageBundle {
+            image: assets.load("imgs/a_button.png").into(),
+            style: Style {
+                size: Size::all(Val::Px(35.0)),
+                ..default()
+            },
+            ..default()
+        },
+        Name::new("Play Button Image"),
+    );
+
     let title_txt = (
         TextBundle {
             text: Text::from_section(
@@ -59,12 +71,13 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
                 TextStyle {
                     color: Color::RED.into(),
                     font: assets.load("fonts/PermanentMarker-Regular.ttf"),
-                    font_size: 100.0,
+                    font_size: 125.0,
                 },
             ),
             style: Style {
                 align_self: AlignSelf::Start,
                 position_type: PositionType::Absolute,
+                position: UiRect::top(Val::Percent(5.0)),
                 ..default()
             },
             ..default()
@@ -77,6 +90,7 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
         parent.spawn(title_txt);
         parent.spawn(play_btn).with_children(|parent| {
             parent.spawn(play_txt);
+            parent.spawn(play_btn_img);
         });
     });
 }

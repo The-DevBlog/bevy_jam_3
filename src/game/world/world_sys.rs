@@ -80,8 +80,9 @@ pub fn spawn_light(mut cmds: Commands) {
     cmds.spawn((
         PointLightBundle {
             point_light: PointLight {
-                shadows_enabled: true,
                 color: Color::GREEN.into(),
+                intensity: 5000.0,
+                shadows_enabled: true,
                 ..default()
             },
             transform: Transform::from_xyz(0.0, 5.0, 0.0),
