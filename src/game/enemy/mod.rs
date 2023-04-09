@@ -25,13 +25,12 @@ impl Plugin for EnemyPlugin {
             .add_system(reset_health.in_schedule(OnEnter(AppState::Game)))
             .add_systems(
                 (
-                    // spawn_enemies,
+                    spawn_enemies,
                     enemy_tracking,
                     enemy_attack,
                     increase_hp_over_time,
                 )
                     .in_set(OnUpdate(AppState::Game)),
-            )
-            .add_system(spawn_enemies.in_schedule(OnEnter(AppState::Game)));
+            );
     }
 }

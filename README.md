@@ -31,6 +31,8 @@ The side effects in *Zombeats* take form of three different *powerups* that the 
 ### Pictures
 
 <img src="assets/imgs/demo/main_menu.png" alt="Main Menu" width="50%">
+<img src="assets/imgs/demo/gameplay.png" alt="Main Menu" width="50%">
+<img src="assets/imgs/demo/gameover.png" alt="Main Menu" width="50%">
 
 ---
 ### Credits
