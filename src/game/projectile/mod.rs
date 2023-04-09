@@ -8,7 +8,7 @@ use crate::AppState;
 use projectile_res::*;
 use projectile_sys::*;
 
-pub const PROJECTILE_SPEED: f32 = 15.0;
+pub const PROJECTILE_SPEED: f32 = 25.0;
 pub const FIRE_RATE: u64 = 150;
 
 pub struct ProjectilePlugin;
