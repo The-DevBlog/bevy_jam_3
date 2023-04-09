@@ -4,19 +4,15 @@ use crate::{gamepad::gamepad_rcs::MyGamepad, AppState};
 
 use super::{
     main_menu_cmps::{MainMenu, MainMenuCamera, PlayBtn},
-    MENU_COLOR, PLAY_BTN_COLOR, PLAY_BTN_COLOR_HOVER,
+    PLAY_BTN_COLOR, PLAY_BTN_COLOR_HOVER,
 };
 
 pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
-    cmds.spawn((Camera3dBundle::default(), MainMenuCamera));
-
-    let container = (
-        NodeBundle {
-            background_color: MENU_COLOR.into(),
+    let img_container = (
+        ImageBundle {
+            image: assets.load("imgs/main_menu_background.png").into(),
             style: Style {
-                align_self: AlignSelf::Center,
                 align_items: AlignItems::Center,
-                flex_direction: FlexDirection::Column,
                 justify_content: JustifyContent::Center,
                 size: Size::all(Val::Percent(100.0)),
                 ..default()
@@ -24,16 +20,17 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
             ..default()
         },
         MainMenu,
-        Name::new("Main Menu"),
+        Name::new("Main Menu Image"),
     );
 
     let play_btn = (
         ButtonBundle {
             background_color: PLAY_BTN_COLOR.into(),
             style: Style {
-                size: Size::new(Val::Px(150.0), Val::Px(75.0)),
-                justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
+                justify_content: JustifyContent::Center,
+                position: UiRect::top(Val::Percent(30.0)),
+                size: Size::new(Val::Px(150.0), Val::Px(75.0)),
                 ..default()
             },
             ..default()
@@ -44,10 +41,10 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
 
     let play_txt = (
         TextBundle::from_section(
-            "Play - A",
+            "Play - ",
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },
@@ -55,9 +52,45 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
         Name::new("Play Text"),
     );
 
-    cmds.spawn(container).with_children(|parent| {
+    let play_btn_img = (
+        ImageBundle {
+            image: assets.load("imgs/a_button.png").into(),
+            style: Style {
+                size: Size::all(Val::Px(35.0)),
+                ..default()
+            },
+            ..default()
+        },
+        Name::new("Play Button Image"),
+    );
+
+    let title_txt = (
+        TextBundle {
+            text: Text::from_section(
+                "ZOMBEATS",
+                TextStyle {
+                    color: Color::RED.into(),
+                    font: assets.load("fonts/PermanentMarker-Regular.ttf"),
+                    font_size: 125.0,
+                },
+            ),
+            style: Style {
+                align_self: AlignSelf::Start,
+                position_type: PositionType::Absolute,
+                position: UiRect::top(Val::Percent(5.0)),
+                ..default()
+            },
+            ..default()
+        },
+        Name::new("Zombeats Text"),
+    );
+
+    cmds.spawn((Camera3dBundle::default(), MainMenuCamera));
+    cmds.spawn(img_container).with_children(|parent| {
+        parent.spawn(title_txt);
         parent.spawn(play_btn).with_children(|parent| {
             parent.spawn(play_txt);
+            parent.spawn(play_btn_img);
         });
     });
 }

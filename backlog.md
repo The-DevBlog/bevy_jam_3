@@ -1,21 +1,16 @@
-# project names: 
-- Zombeats
-- Zombie Nightclub
-
 # Back Log (by priority)
-- Add title screen
 - Better map
   - add obstacles 
-- Texture/Models
-  - Enemy
-  - Player
-  - World
 - Write readme
   - Credits
     - Music
     - Sound effects
 
 # Out of Jam Scopes
+- Texture/Models
+  - Enemy
+  - Player
+  - World
 - Shaders
   - Projectiles
   - Powerups

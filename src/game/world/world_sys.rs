@@ -16,7 +16,7 @@ pub fn spawn_ground(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let floor_txtr = assets.load("textures/checkers03_s.png");
+    let floor_txtr = assets.load("textures/floor.png");
 
     let material_handle = materials.add(StandardMaterial {
         base_color_texture: Some(floor_txtr.clone()),
@@ -40,7 +40,6 @@ pub fn spawn_ground(
 
 pub fn spawn_walls(
     mut cmds: Commands,
-    // assets: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
@@ -81,8 +80,9 @@ pub fn spawn_light(mut cmds: Commands) {
     cmds.spawn((
         PointLightBundle {
             point_light: PointLight {
-                shadows_enabled: true,
                 color: Color::GREEN.into(),
+                intensity: 5000.0,
+                shadows_enabled: true,
                 ..default()
             },
             transform: Transform::from_xyz(0.0, 5.0, 0.0),

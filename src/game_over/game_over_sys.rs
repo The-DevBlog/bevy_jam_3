@@ -12,13 +12,10 @@ pub fn spawn_menu(
     game_time: Res<GameTime>,
     kills: Res<KillCount>,
 ) {
-    cmds.spawn((Camera3dBundle::default(), GameOverMenu));
-
-    let container = (
-        NodeBundle {
-            background_color: GAME_OVER_MENU_COLOR.into(),
+    let img_container = (
+        ImageBundle {
+            image: assets.load("imgs/gameover_background.png").into(),
             style: Style {
-                align_self: AlignSelf::Center,
                 align_items: AlignItems::Center,
                 flex_direction: FlexDirection::Column,
                 justify_content: JustifyContent::Center,
@@ -28,7 +25,7 @@ pub fn spawn_menu(
             ..default()
         },
         GameOverMenu,
-        Name::new("Game Over Menu"),
+        Name::new("Game Over Image"),
     );
 
     let killcount_txt = (
@@ -36,7 +33,7 @@ pub fn spawn_menu(
             format!("Kills: {}", kills.0),
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },
@@ -50,7 +47,7 @@ pub fn spawn_menu(
             format!("Time Survived: {:.2}", time),
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },
@@ -76,10 +73,10 @@ pub fn spawn_menu(
 
     let play_again_txt = (
         TextBundle::from_section(
-            "Play Again - Y",
+            "Play Again - ",
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },
@@ -87,8 +84,22 @@ pub fn spawn_menu(
         Name::new("Play Again Text"),
     );
 
+    let play_again_img = (
+        ImageBundle {
+            image: assets.load("imgs/y_button.png").into(),
+            style: Style {
+                size: Size::all(Val::Px(35.0)),
+                ..default()
+            },
+            ..default()
+        },
+        Name::new("Play Again Button Image"),
+    );
+
+    cmds.spawn((Camera3dBundle::default(), GameOverMenu));
+
     // game over menu
-    cmds.spawn(container).with_children(|parent| {
+    cmds.spawn(img_container).with_children(|parent| {
         // time survived txt
         parent.spawn(time_survived_txt);
 
@@ -97,8 +108,9 @@ pub fn spawn_menu(
 
         // play again btn
         parent.spawn(play_again_btn).with_children(|parent| {
-            // play again txt
+            // play again txt and btn img
             parent.spawn(play_again_txt);
+            parent.spawn(play_again_img);
         });
     });
 }

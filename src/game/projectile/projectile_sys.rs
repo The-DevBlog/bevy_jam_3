@@ -30,18 +30,22 @@ pub fn shoot_projectile(
 ) {
     // return id of gamepad if one is connected
     let gamepad = if let Some(gp) = my_gamepad {
-        gp.gamepad
+        Some(gp.gamepad)
     } else {
-        return;
+        None
     };
 
     if let Ok(player_trans) = player_q.get_single() {
-        let right_trigger = GamepadButton::new(gamepad, GamepadButtonType::RightTrigger2);
-
         // Get the camera's forward direction vector on the xz plane
         let cam_trans = cam_q.iter().next().unwrap();
 
-        if btns.pressed(right_trigger) || mouse.pressed(MouseButton::Left) {
+        let right_trigger = if let Some(g) = gamepad {
+            btns.pressed(GamepadButton::new(g, GamepadButtonType::RightTrigger2))
+        } else {
+            false
+        };
+
+        if right_trigger || mouse.pressed(MouseButton::Left) {
             if fire_rate.0.finished() || fire_rate.0.percent_left() == 1.0 {
                 let projectile = (
                     PbrBundle {
