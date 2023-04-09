@@ -9,6 +9,7 @@ use super::{game_cmps::Game, game_res::GameTime};
 
 pub fn exit_game(
     btns: Res<Input<GamepadButton>>,
+    keys: Res<Input<KeyCode>>,
     my_gamepad: Option<Res<MyGamepad>>,
     mut next_app_state: ResMut<NextState<AppState>>,
     mut game_time: ResMut<GameTime>,
@@ -18,7 +19,7 @@ pub fn exit_game(
         .map(|gp| btns.just_pressed(GamepadButton::new(gp.gamepad, GamepadButtonType::Start)))
         .unwrap_or(false);
 
-    if gamepad_input {
+    if gamepad_input || keys.just_pressed(KeyCode::Escape) {
         next_app_state.set(AppState::MainMenu);
         game_time.0.reset(); // reset stopwatch
     }

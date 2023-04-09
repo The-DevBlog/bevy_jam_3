@@ -3,7 +3,6 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
-- Bound player mouse to screen (makes mouse users impossible)
 - Add title screen
 - Better map
   - add obstacles 
