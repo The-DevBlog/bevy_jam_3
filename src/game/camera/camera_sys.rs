@@ -23,7 +23,7 @@ pub fn orbit_mouse(
         if rotation.length_squared() > 0.0 {
             let window = window_q.get_single().unwrap();
             let delta_x = {
-                let delta = rotation.x / window.width() * std::f32::consts::PI * 2.0;
+                let delta = rotation.x / window.width() * std::f32::consts::PI;
                 if cam.upside_down {
                     -delta
                 } else {
