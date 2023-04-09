@@ -91,8 +91,6 @@ pub fn enemy_attack(
     mut player: Query<(&Transform, &mut Hp), (With<Player>, Without<Enemy>)>,
 ) {
     for (enemy_trans, mut attack_rate, enemy_dmg) in enemy_q.iter_mut() {
-        println!("ENEMY TIMER: {:?}", attack_rate.0.elapsed());
-
         if let Ok((player_trans, mut player_hp)) = player.get_single_mut() {
             let distance = Vec3::distance(enemy_trans.translation, player_trans.translation);
 
