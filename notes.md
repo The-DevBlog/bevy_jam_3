@@ -3,7 +3,6 @@
 - Zombie Nightclub
 
 # Back Log (by priority)
-- Add title screen
 - Better map
   - add obstacles 
 - Texture/Models

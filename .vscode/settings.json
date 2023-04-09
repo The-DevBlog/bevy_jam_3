@@ -4,6 +4,7 @@
         "cmds",
         "cmps",
         "despawn",
+        "gameover",
         "gamepad",
         "healthbar",
         "killcount",

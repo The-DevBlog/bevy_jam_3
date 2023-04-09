@@ -12,13 +12,10 @@ pub fn spawn_menu(
     game_time: Res<GameTime>,
     kills: Res<KillCount>,
 ) {
-    cmds.spawn((Camera3dBundle::default(), GameOverMenu));
-
-    let container = (
-        NodeBundle {
-            background_color: GAME_OVER_MENU_COLOR.into(),
+    let img_container = (
+        ImageBundle {
+            image: assets.load("imgs/gameover_background.png").into(),
             style: Style {
-                align_self: AlignSelf::Center,
                 align_items: AlignItems::Center,
                 flex_direction: FlexDirection::Column,
                 justify_content: JustifyContent::Center,
@@ -28,7 +25,7 @@ pub fn spawn_menu(
             ..default()
         },
         GameOverMenu,
-        Name::new("Game Over Menu"),
+        Name::new("Game Over Image"),
     );
 
     let killcount_txt = (
@@ -87,8 +84,10 @@ pub fn spawn_menu(
         Name::new("Play Again Text"),
     );
 
+    cmds.spawn((Camera3dBundle::default(), GameOverMenu));
+
     // game over menu
-    cmds.spawn(container).with_children(|parent| {
+    cmds.spawn(img_container).with_children(|parent| {
         // time survived txt
         parent.spawn(time_survived_txt);
 
