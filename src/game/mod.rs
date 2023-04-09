@@ -1,8 +1,5 @@
 use bevy::prelude::*;
-use bevy_rapier3d::{
-    prelude::{NoUserData, RapierPhysicsPlugin},
-    render::RapierDebugRenderPlugin,
-};
+use bevy_rapier3d::prelude::{NoUserData, RapierPhysicsPlugin};
 
 // use bevy_rapier3d::render::RapierDebugRenderPlugin;
 
@@ -39,7 +36,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<GameTime>()
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
-            .add_plugin(RapierDebugRenderPlugin::default())
+            // .add_plugin(RapierDebugRenderPlugin::default())
             .add_plugin(MusicPlugin)
             .add_plugin(WorldPlugin)
             .add_plugin(PowerUpsPlugin)
