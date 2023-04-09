@@ -52,8 +52,29 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
         Name::new("Play Text"),
     );
 
+    let title_txt = (
+        TextBundle {
+            text: Text::from_section(
+                "ZOMBEATS",
+                TextStyle {
+                    color: Color::RED.into(),
+                    font: assets.load("fonts/PermanentMarker-Regular.ttf"),
+                    font_size: 100.0,
+                },
+            ),
+            style: Style {
+                align_self: AlignSelf::Start,
+                position_type: PositionType::Absolute,
+                ..default()
+            },
+            ..default()
+        },
+        Name::new("Zombeats Text"),
+    );
+
     cmds.spawn((Camera3dBundle::default(), MainMenuCamera));
     cmds.spawn(img_container).with_children(|parent| {
+        parent.spawn(title_txt);
         parent.spawn(play_btn).with_children(|parent| {
             parent.spawn(play_txt);
         });
