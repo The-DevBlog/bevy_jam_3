@@ -36,7 +36,7 @@ pub fn spawn_menu(
             format!("Kills: {}", kills.0),
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },
@@ -50,7 +50,7 @@ pub fn spawn_menu(
             format!("Time Survived: {:.2}", time),
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },
@@ -79,7 +79,7 @@ pub fn spawn_menu(
             "Play Again - Y",
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },

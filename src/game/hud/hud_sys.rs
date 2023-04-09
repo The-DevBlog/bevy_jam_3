@@ -12,7 +12,7 @@ pub fn spawn_kill_count(mut cmds: Commands, assets: Res<AssetServer>) {
         text: Text::from_section(
             "",
             TextStyle {
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 25.0,
                 color: Color::WHITE.into(),
             },
@@ -141,7 +141,7 @@ pub fn spawn_time_display(mut cmds: Commands, assets: Res<AssetServer>) {
             "0:00",
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },
@@ -178,7 +178,7 @@ fn create_txt(assets: &Res<AssetServer>) -> TextBundle {
         "",
         TextStyle {
             color: Color::WHITE,
-            font: assets.load("fonts/FiraSans-Bold.ttf"),
+            font: assets.load("fonts/PermanentMarker-Regular.ttf"),
             font_size: 25.0,
         },
     )

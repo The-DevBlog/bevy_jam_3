@@ -44,7 +44,7 @@ pub fn spawn_menu(mut cmds: Commands, assets: Res<AssetServer>) {
             "Play - A",
             TextStyle {
                 color: Color::WHITE,
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 40.0,
                 ..default()
             },

@@ -40,7 +40,6 @@ pub fn spawn_ground(
 
 pub fn spawn_walls(
     mut cmds: Commands,
-    // assets: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {

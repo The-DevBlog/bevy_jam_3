@@ -179,7 +179,7 @@ pub fn spawn_dmg_powerup_duration_display(mut cmds: Commands, assets: Res<AssetS
         text: Text::from_section(
             "",
             TextStyle {
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 25.0,
                 color: Color::WHITE.into(),
             },
@@ -262,7 +262,7 @@ fn powerup_txt(assets: &Res<AssetServer>, txt: String) -> TextBundle {
         text: Text::from_section(
             txt,
             TextStyle {
-                font: assets.load("fonts/FiraSans-Bold.ttf"),
+                font: assets.load("fonts/PermanentMarker-Regular.ttf"),
                 font_size: 25.0,
                 color: Color::WHITE.into(),
             },
