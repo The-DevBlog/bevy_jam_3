@@ -13,15 +13,20 @@ pub fn spawn_player(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
+    let half_size = PLAYER_SIZE / 2.0;
     let player = cmds
         .spawn((
             PbrBundle {
                 material: materials.add(Color::BLUE.into()),
-                mesh: meshes.add(Mesh::from(shape::Cube::new(PLAYER_SIZE))),
+                mesh: meshes.add(Mesh::from(shape::Capsule {
+                    radius: half_size,
+                    depth: half_size,
+                    ..default()
+                })),
                 transform: Transform::from_xyz(0.0, 0.25, 0.0),
                 ..default()
             },
-            Collider::cuboid(PLAYER_SIZE / 2.0, PLAYER_SIZE / 2.0, PLAYER_SIZE / 2.0),
+            Collider::cylinder(half_size, half_size),
             Damage::new(25.0),
             Hp::new(PLAYER_HP),
             Game,
@@ -82,10 +87,10 @@ pub fn player_map_bounds(mut player_q: Query<&mut Transform, With<Player>>) {
 pub fn move_player_keyboard(
     time: Res<Time>,
     keys: Res<Input<KeyCode>>,
-    mut player_q: Query<(&mut Transform, &Speed, &mut IsSprinting), With<Player>>,
+    mut player_q: Query<(&mut Transform, &Speed, &mut IsSprinting, &Stamina), With<Player>>,
     cam_q: Query<&Transform, (With<CustomCamera>, Without<Player>)>,
 ) {
-    for (mut trans, speed, mut sprinting) in player_q.iter_mut() {
+    for (mut trans, speed, mut sprinting, stamina) in player_q.iter_mut() {
         let cam = match cam_q.get_single() {
             Ok(c) => c,
             Err(e) => Err(format!("Error retrieving camera: {}", e)).unwrap(),
@@ -115,7 +120,7 @@ pub fn move_player_keyboard(
 
         // sprint
         let mut sprint = 1.0;
-        if keys.pressed(KeyCode::LShift) {
+        if keys.pressed(KeyCode::LShift) && stamina.value > 0.0 {
             sprint = SPRINT_SPEED;
             sprinting.0 = true;
         }

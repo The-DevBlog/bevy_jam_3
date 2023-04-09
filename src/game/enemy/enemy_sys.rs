@@ -56,7 +56,7 @@ pub fn spawn_enemies(
                 ..default()
             },
             AttackRate::default(),
-            Collider::cuboid(size_half, size_half, size_half),
+            Collider::cylinder(size_half, size_half),
             Damage::new(10.0),
             Enemy,
             Game,
@@ -94,7 +94,7 @@ pub fn enemy_attack(
         if let Ok((player_trans, mut player_hp)) = player.get_single_mut() {
             let distance = Vec3::distance(enemy_trans.translation, player_trans.translation);
 
-            if distance < 0.8 {
+            if distance < ENEMY_SIZE {
                 if attack_rate.0.finished() || attack_rate.0.percent_left() == 1.0 {
                     player_hp.value -= enemy_dmg.value;
                     let sound = assets.load(r"audio\hurt.ogg");

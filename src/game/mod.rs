@@ -4,6 +4,8 @@ use bevy_rapier3d::{
     render::RapierDebugRenderPlugin,
 };
 
+// use bevy_rapier3d::render::RapierDebugRenderPlugin;
+
 pub mod camera;
 pub mod enemy;
 pub mod game_cmps;
