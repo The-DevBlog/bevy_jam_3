@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use bevy::{
     input::mouse::{MouseMotion, MouseWheel},
     prelude::*,
@@ -31,7 +33,7 @@ pub fn orbit_mouse(
                 }
             };
 
-            let delta_y = rotation.y / window.height() * std::f32::consts::PI;
+            let delta_y = rotation.y / window.height() * PI;
             let yaw = Quat::from_rotation_y(-delta_x);
             let pitch = Quat::from_rotation_x(-delta_y);
             trans.rotation = yaw * trans.rotation; // rotate around global y axis
@@ -81,8 +83,7 @@ pub fn orbit_gamepad(
                     delta
                 }
             };
-            let delta_y =
-                -rotation.y / window.height() * std::f32::consts::PI * gamepad.sensitivity.1;
+            let delta_y = -rotation.y / window.height() * PI * gamepad.sensitivity.1;
             let yaw = Quat::from_rotation_y(-delta_x);
             let pitch = Quat::from_rotation_x(-delta_y);
             trans.rotation = yaw * trans.rotation; // rotate around global y axis
