@@ -122,18 +122,15 @@ pub fn zoom_gamepad(
     };
 
     if let Ok(mut cam) = cam_q.get_single_mut() {
-        let right_thumb = GamepadButton::new(gamepad, GamepadButtonType::RightThumb);
-        if btns.pressed(right_thumb) {
-            let d_pad_down = GamepadButton::new(gamepad, GamepadButtonType::DPadDown);
-            let d_pad_up = GamepadButton::new(gamepad, GamepadButtonType::DPadUp);
+        let d_pad_down = GamepadButton::new(gamepad, GamepadButtonType::DPadDown);
+        let d_pad_up = GamepadButton::new(gamepad, GamepadButtonType::DPadUp);
 
-            // zoom out
-            if btns.pressed(d_pad_down) {
-                cam.radius += cam.radius * 0.01;
-            // zoom in
-            } else if btns.pressed(d_pad_up) {
-                cam.radius -= cam.radius * 0.01;
-            }
+        // zoom out
+        if btns.pressed(d_pad_down) {
+            cam.radius += cam.radius * 0.01;
+        // zoom in
+        } else if btns.pressed(d_pad_up) {
+            cam.radius -= cam.radius * 0.01;
         }
     }
 }

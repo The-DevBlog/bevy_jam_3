@@ -42,30 +42,30 @@ pub fn spawn_enemies(
     let x = rng.gen_range(-map_bounds..=map_bounds);
     let z = rng.gen_range(-map_bounds..=map_bounds);
 
-    if spawn_timer.0.finished() {
-        let size_half = ENEMY_SIZE / 2.0;
-        cmds.spawn((
-            PbrBundle {
-                material: materials.add(Color::RED.into()),
-                mesh: meshes.add(Mesh::from(shape::Capsule {
-                    radius: size_half,
-                    depth: size_half,
-                    ..default()
-                })),
-                transform: Transform::from_xyz(x, 0.5, z),
+    // if spawn_timer.0.finished() {
+    let size_half = ENEMY_SIZE / 2.0;
+    cmds.spawn((
+        PbrBundle {
+            material: materials.add(Color::RED.into()),
+            mesh: meshes.add(Mesh::from(shape::Capsule {
+                radius: size_half,
+                depth: size_half,
                 ..default()
-            },
-            AttackRate::default(),
-            Collider::cylinder(size_half, size_half),
-            Damage::new(10.0),
-            Enemy,
-            Game,
-            Hp::new(enemy_hp.0),
-            Name::new("Enemy"),
-            RigidBody::Dynamic,
-            Speed(ENEMY_SPEED),
-        ));
-    }
+            })),
+            transform: Transform::from_xyz(x, 0.5, z),
+            ..default()
+        },
+        AttackRate::default(),
+        Collider::cylinder(size_half, size_half),
+        Damage::new(10.0),
+        Enemy,
+        Game,
+        Hp::new(enemy_hp.0),
+        Name::new("Enemy"),
+        RigidBody::Dynamic,
+        Speed(ENEMY_SPEED),
+    ));
+    // }
 }
 
 /// enemies track towards player
@@ -91,17 +91,25 @@ pub fn enemy_attack(
     mut player: Query<(&Transform, &mut Hp), (With<Player>, Without<Enemy>)>,
 ) {
     for (enemy_trans, mut attack_rate, enemy_dmg) in enemy_q.iter_mut() {
+        println!("ENEMY TIMER: {:?}", attack_rate.0.elapsed());
+
         if let Ok((player_trans, mut player_hp)) = player.get_single_mut() {
             let distance = Vec3::distance(enemy_trans.translation, player_trans.translation);
 
             if distance < ENEMY_SIZE {
-                if attack_rate.0.finished() || attack_rate.0.percent_left() == 1.0 {
+                if attack_rate.0.percent_left() == 1.0 {
                     player_hp.value -= enemy_dmg.value;
                     let sound = assets.load(r"audio\hurt.ogg");
                     audio.play(sound);
+                    attack_rate.0.tick(time.delta());
                 }
+            }
+
+            if attack_rate.0.percent_left() < 1.0 {
                 attack_rate.0.tick(time.delta());
-            } else {
+            }
+
+            if attack_rate.0.finished() {
                 attack_rate.0.reset();
             }
         }
